@@ -1,10 +1,11 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Flex, Image } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
-import InputProductModal from "./InputProductModal";
+import { useEffect, useState } from "react";
+import InputProductModal from "./inputProductModal/InputProductModal";
+import { placeHolderImg } from "../assets/300";
 
 function AddProductCard() {
-  const titleRef = useRef<HTMLDivElement | null>(null);
+  // const titleRef = useRef<HTMLDivElement | null>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [randomNumber, setRandomNumber] = useState(Math.random());
   useEffect(() => {
@@ -19,7 +20,12 @@ function AddProductCard() {
         onBlur={() => setIsHovering(false)}
         pos={"relative"}
         mb={`6px`}
-        transform={isHovering ? `scale(1) rotate(${0}deg)` : `scale(0.95) rotate(${Math.random() * 6 - 3}deg)`}
+        
+        transform={
+          isHovering
+            ? `scale(1) rotate(${0}deg)`
+            : `scale(0.85) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
+        }
         transition="transform 0.3s ease"
       >
         <Box pos={"relative"}>
@@ -49,14 +55,14 @@ function AddProductCard() {
             bgPosition="center"
             src={
               "https://image.pollinations.ai/prompt/" +
-              `High Quality, Sharp, Advertisement, Professional Photography, Simple Background, Tapioca Pearls, Oreo Cookies, Straw, delicious milktea bubble tea, delicious milktea bubble tea, delicious milktea bubble tea, delicious milktea bubble tea, delicious milktea bubble tea, ${randomNumber}`
+              `Milkshake, milktea, tea, straw, cup, mug, tapioca pearls, pearls, cookies, cream, food, drink, dessert${randomNumber}`
             } //
-            fallbackSrc="https://via.placeholder.com/300"
+            fallbackSrc={placeHolderImg}
           />
         </Box>
         <Box
           overflow={"auto"}
-          ref={titleRef}
+          // ref={titleRef}
           maxW={300}
           // boxShadow={"0 4px 6px rgba(50, 50, 93, 1), 0 1px 3px rgba(0, 0, 0, 0.5)"}
           boxShadow={"md"}
@@ -70,7 +76,12 @@ function AddProductCard() {
           transition="transform 0.3s ease"
           borderRadius={"8px"}
         >
-          <InputProductModal borderRadius={"8px"} colorScheme="green" rightIcon={<AddIcon />} title="Add Item">
+          <InputProductModal
+            borderRadius={"8px"}
+            colorScheme="green"
+            rightIcon={<AddIcon />}
+            title="Add Item"
+          >
             Add Item
           </InputProductModal>
         </Box>

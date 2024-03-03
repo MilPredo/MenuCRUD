@@ -9,7 +9,7 @@ function OptionSection({
   optionSets: Partial<Array<OptionSet>>;
 }) {
   return (
-    <Stack key={Math.random()} divider={<Divider />} pb={2} flexDir={"column"}>
+    <Stack key={Math.random()} divider={<Divider />} pb={2} flexDir={"column"}> 
       {optionSets.map((optionSet, index) => {
         return (
           <Flex flexDir="column" key={optionSet?.optionSetName ?? "" + index}>

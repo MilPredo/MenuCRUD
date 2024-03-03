@@ -6,7 +6,7 @@ export type Option = {
   priceModifier: number;
   minQuantity?: number;
   maxQuantity?: number;
-  defaultOption?: boolean
+  defaultOption?: boolean;
 };
 
 export type OptionSet = {
@@ -14,6 +14,15 @@ export type OptionSet = {
   minOptions?: number;
   maxOptions?: number;
   options: Array<Option>;
+};
+
+export type FormikProductData = Omit<
+  ProductData,
+  "baseCost" | "basePrice" | "stock"
+> & {
+  baseCost: string | number;
+  basePrice: string | number;
+  stock: string | number;
 };
 
 export type ProductData = {
@@ -30,7 +39,3 @@ export type ProductData = {
 export interface ProductCardProps {
   productData: ProductData;
 }
-
-// export declare function useFormik<Values extends FormikValues = FormikValues>({ validateOnChange, validateOnBlur, validateOnMount, isInitialValid, enableReinitialize, onSubmit, ...rest }: FormikConfig<Values>): 
-
-
