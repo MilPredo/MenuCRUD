@@ -11,7 +11,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FormikProps } from "formik";
-import React from "react";
 import { FormikProductData } from "../../types";
 
 function InputProductDetails({

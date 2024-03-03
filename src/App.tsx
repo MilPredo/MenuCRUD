@@ -1,12 +1,5 @@
 import {} from "@chakra-ui/icons";
-import {
-  ChakraProvider,
-  Flex,
-  extendTheme,
-  Heading,
-  Grid,
-  GridItem,
-} from "@chakra-ui/react";
+import { ChakraProvider, Flex, extendTheme, Heading, Grid, GridItem } from "@chakra-ui/react";
 import { ProductData } from "./types";
 import AddProductCard from "./components/AddProductCard";
 import ProductCard from "./components/ProductCard";
@@ -24,6 +17,7 @@ import "@fontsource-variable/quicksand";
 import "@fontsource-variable/hepta-slab";
 import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
+import AddProductCard2 from "./components/AddProductCard2";
 const customTheme = extendTheme({
   fonts: {
     body: "''Quicksand', sans-serif'",
@@ -79,8 +73,7 @@ function App() {
     },
     {
       name: "Winter Melon",
-      image:
-        "https://i.pinimg.com/originals/5a/87/7b/5a877b23152374455565ff1708d8e5f8.jpg",
+      image: "https://i.pinimg.com/originals/5a/87/7b/5a877b23152374455565ff1708d8e5f8.jpg",
       imageAlt: "nani",
       baseCost: 20,
       basePrice: 40,
@@ -211,12 +204,11 @@ function App() {
     },
   ];
 
-  
   return (
     <ChakraProvider theme={customTheme}>
       <Flex
         flexDir={"column"}
-        backgroundColor={"#f9f3ec"}
+        backgroundColor={"#ead9c8"} //{"#f9f3ec"}
         h={"100vh"}
         overflow="hidden"
       >
@@ -238,14 +230,13 @@ function App() {
           <Flex flex={1}>
             <SearchBar />
           </Flex>
-          <Flex flex={1}> 
-          </Flex>
+          <Flex flex={1}></Flex>
         </Flex>
         <Flex flexDir={"column"} align="center" h="100%" overflow="auto">
-          <Grid maxW="1280px" templateColumns="repeat(4, 1fr)" gap={2} p={2}>
-            <GridItem flexDir={"column"}>
-              <AddProductCard />
-            </GridItem>
+          <Grid maxW="1280px" templateColumns="repeat(5, 1fr)" gap={2} p={2}>
+            {/* <GridItem flexDir={"column"}>
+              <AddProductCard2 />
+            </GridItem> */}
             {mockData.map((data, key) => (
               <GridItem key={data.name + key} flexDir={"column"}>
                 <Flex flexDir="column" align="center" h="100%">

@@ -31,6 +31,7 @@ function DeleteProductButton({
         rightIcon={rightIcon}
         leftIcon={leftIcon}
         variant="solid"
+        size="sm"
       >
         Delete
       </Button>

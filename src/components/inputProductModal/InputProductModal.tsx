@@ -108,6 +108,7 @@ function InputProductModal({
         leftIcon={leftIcon}
         variant="solid"
         colorScheme={colorScheme ?? "blue"}
+        size="sm"
       >
         {children}
       </Button>
