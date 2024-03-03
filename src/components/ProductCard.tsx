@@ -156,7 +156,7 @@ function ProductCard({ productData }: ProductCardProps) {
             spacing="0"
             gap={1}
           >
-            <Flex flex={1} flexDir="column">
+            <Flex flex={1} flexDir="column"  justify="space-between">
               <Text
                 fontWeight={"600"}
                 textAlign="center"
@@ -166,10 +166,10 @@ function ProductCard({ productData }: ProductCardProps) {
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize="24px">
+                <Heading as="span" fontSize={(productData.basePrice).toString().split('').length > 3 ? "18px" : "24px"}>
                   ₱
                 </Heading>
-                <Heading as="span" size="lg">
+                <Heading as="span" size={(productData.basePrice).toString().split('').length > 3 ? "md" : "lg"}>
                   {formatCurrency(productData.baseCost).whole}
                 </Heading>
                 <Heading as="span" size="sm">
@@ -180,7 +180,7 @@ function ProductCard({ productData }: ProductCardProps) {
                 </Heading>
               </Heading>
             </Flex>
-            <Flex flex={1} flexDir="column">
+            <Flex flex={1} flexDir="column" justify="space-between">
               <Text
                 fontWeight={"600"}
                 textAlign="center"
@@ -190,11 +190,11 @@ function ProductCard({ productData }: ProductCardProps) {
                 Price
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize="24px">
+                <Heading as="span" fontSize={(productData.basePrice).toString().split('').length > 3 ? "18px" : "24px"}>
                   ₱
                 </Heading>
-                <Heading as="span" size="lg">
-                  {formatCurrency(productData.basePrice + 100).whole}
+                <Heading as="span" size={(productData.basePrice).toString().split('').length > 3 ? "md" : "lg"}>
+                  {formatCurrency(productData.basePrice ).whole}
                 </Heading>
                 <Heading as="span" size="sm">
                   .

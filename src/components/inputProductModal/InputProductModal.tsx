@@ -3,6 +3,7 @@ import { FormikProductData, ProductData } from "../../types";
 import {
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Flex,
   Modal,
@@ -133,7 +134,7 @@ function InputProductModal({
         {children}
       </Button>
       <Modal
-        size="6xl"
+        size="xl"
         isOpen={isOpen}
         onClose={() => {
           // setSelectedImage(productData?.image ?? null);
@@ -148,61 +149,80 @@ function InputProductModal({
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stepper index={activeStep}>
-                {steps.map((step, index) => (
-                  <Step key={index}>
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepIcon />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
-
-                    <Box flexShrink="0">
-                      <StepTitle>{step.title}</StepTitle>
-                      <StepDescription>{step.description}</StepDescription>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                ))}
-              </Stepper>
               <Stack
                 divider={<Divider orientation="vertical" />}
                 spacing="0"
                 gap={4}
               >
-                <Flex align="center" gap={8}>
-                  <InputImage formik={formik} />
-                  <InputProductDetails formik={formik} />
-                </Flex>
-                <InputOptionSets formik={formik} />
+                <Stepper index={activeStep}>
+                  {steps.map((step, index) => (
+                    <Step key={index}>
+                      <StepIndicator>
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
+                      </StepIndicator>
+
+                      <Box flexShrink="0">
+                        <StepTitle>{step.title}</StepTitle>
+                        <StepDescription>{step.description}</StepDescription>
+                      </Box>
+
+                      <StepSeparator />
+                    </Step>
+                  ))}
+                </Stepper>
+                {activeStep === 1 && <InputImage formik={formik} />}
+                {activeStep === 2 && <InputProductDetails formik={formik} />}
+                {activeStep === 3 && <InputOptionSets formik={formik} />}
               </Stack>
             </ModalBody>
 
             <ModalFooter>
-              <Button
-                variant="solid"
-                mr={3}
-                onClick={() => {
-                  // setSelectedImage(productData?.image ?? null);
-                  // setSelectedFileName(null);
-                  formik.resetForm();
-                  onClose();
-                }}
-                type="button"
-              >
-                Close
-              </Button>
-              <Button
-                type="submit"
-                colorScheme="green"
-                variant="solid"
-                isLoading={formik.isSubmitting}
-              >
-                Save
-              </Button>
+              <ButtonGroup>
+                <Button
+                  variant="solid"
+                  onClick={() => {
+                    formik.resetForm();
+                    onClose();
+                  }}
+                  type="button"
+                >
+                  Close
+                </Button>
+
+                <Button
+                  // type="submit"
+                  isDisabled={activeStep === 1}
+                  colorScheme="blue"
+                  onClick={() => {
+                    setActiveStep(Math.min(Math.max(activeStep - 1, 1), 3));
+                  }}
+                  // isLoading={formik.isSubmitting}
+                >
+                  Previous
+                </Button>
+                <Button
+                  isDisabled={activeStep === 3}
+                  colorScheme="blue"
+                  onClick={() => {
+                    setActiveStep(Math.min(Math.max(activeStep + 1, 0), 3));
+                  }}
+                >
+                  Next
+                </Button>
+
+                <Button
+                  isDisabled={activeStep !== 3}
+                  type="submit"
+                  colorScheme="green"
+                  isLoading={formik.isSubmitting}
+                >
+                  Save
+                </Button>
+              </ButtonGroup>
             </ModalFooter>
           </form>
         </ModalContent>

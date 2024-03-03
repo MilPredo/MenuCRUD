@@ -1,12 +1,12 @@
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Input, Square, Text } from "@chakra-ui/react";
 import { FormikProps } from "formik";
 import { FormikProductData } from "../../types";
-import { useState, useRef } from "react";
 import useFileDropZone from "../../hooks/useImageDropZone";
+import useHover from "../../hooks/useHover";
+import { useEffect, useRef } from "react";
+// import useMultiRef from "../../hooks/useMultiRef";
+
 function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
-  // const [selectedImage, setSelectedImage] = useState<string | null>(
-  //   formik.values?.image ?? null
-  // );
   const {
     dropZoneRef,
     imageInputRef,
@@ -15,65 +15,68 @@ function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
     isDraggedOver,
     isInValid,
   } = useFileDropZone(formik.values.image);
-  // const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
-  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   const reader = new FileReader();
+  const { ref, isHovering } = useHover();
+  // const combinedRef = useMultiRef(ref, dropZoneRef);
+  const combinedRef = useRef<HTMLDivElement>(null);
 
-  //   reader.onloadend = () => {
-  //     setSelectedImage(reader.result as string);
-  //   };
-
-  //   if (file) {
-  //     setSelectedFileName(file.name);
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // const inputFileRef = useRef<HTMLInputElement>(null);
-
-  // const handleBoxClick = () => {
-  //   if (inputFileRef.current) {
-  //     inputFileRef.current.click();
-  //   }
-  // };
+  useEffect(() => {
+    //@ts-ignore
+    dropZoneRef.current = combinedRef.current;
+    //@ts-ignore
+    ref.current = combinedRef.current;
+  }, [dropZoneRef, ref]);
   return (
-    <Flex flexDir="column"> 
+    <Flex flexDir="column" align="center">
       <Box
         backgroundImage={image ?? undefined}
         backgroundSize="cover"
         backgroundPosition="center"
         as="button"
-        ref={dropZoneRef}
+        ref={combinedRef}
         boxSize="300px"
         borderRadius="lg"
         borderWidth={"4px"}
-        borderColor={isDraggedOver ? (isInValid ? "#E53E3E" : "#3182ce") : "GrayText"}
-        transform={`scale(${isDraggedOver ? 1.05 : 1})`}
+        borderColor={
+          isDraggedOver ? (isInValid ? "#E53E3E" : "#3182ce") : "GrayText"
+        }
+        transform={`scale(${isDraggedOver || isHovering ? 1.05 : 1})`}
         transition="transform 0.3s ease"
         type="button"
       >
-        <Box
-          bg="rgba(255,255,255,0.6)"
-          backdropFilter={"blur(4px)"}
-          borderRadius="lg"
-        >
-          <Text fontWeight="bold" fontSize="medium">
-            Click here to upload image
-          </Text>
-          <Text fontWeight="bold" fontSize="medium">
-            Recommended resolution: 300x300
-          </Text>
-          {imageName && (
-            <Text fontWeight="bold" fontSize="medium">
-              Selected file: {imageName}
+        <Center>
+          <Square
+            size="50%"
+            flexDir="column"
+            bg="rgba(255,255,255,0.6)"
+            backdropFilter={"blur(4px)"}
+            borderRadius="lg"
+          >
+            <Text fontWeight="bold" fontSize="large">
+              Drag & Drop Image Here
             </Text>
-          )}
-        </Box>
+            <Text fontWeight="bold" fontSize="smaller">
+              or click to upload
+            </Text>
+            <Text fontSize="smaller">Recommended resolution: 300x300</Text>
+          </Square>
+        </Center>
       </Box>
       <Input ref={imageInputRef} type="file" accept="image/*" display="none" />
+      {imageName && (
+        <Text m="2">
+          <Text as="span" fontWeight="bold" fontSize="medium">
+            Selected file:{" "}
+          </Text>
+          <Text as="span" fontWeight="bold" fontSize="large" color="#3182ce">
+            {imageName}
+          </Text>
+        </Text>
+      )}
     </Flex>
   );
 }
-
+/**
+ *
+ * a modal with steppers on top, with 3 steps, with current step in "Upload Image". there is a square in the middle that says "Drop image here, or click to upload"
+ */
 export default InputImage;
