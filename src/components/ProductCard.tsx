@@ -23,10 +23,12 @@ import "@fontsource-variable/quicksand";
 import "@fontsource/anton";
 import "@fontsource/poppins/800.css";
 import { placeHolderImg } from "../assets/300";
+import useHover from "../hooks/useHover";
 
 function ProductCard({ productData }: ProductCardProps) {
-  const [isHovering, setIsHovering] = useState(false);
+  // const [isHovering, setIsHovering] = useState(false);
   const [isImageIsLoading, setIsImageLoading] = useState(true);
+  const { ref, isHovering } = useHover();
 
   function formatCurrency(amount: number) {
     const roundedAmount = Math.round(amount * 100) / 100;
@@ -44,10 +46,11 @@ function ProductCard({ productData }: ProductCardProps) {
 
   return (
     <Flex
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      onFocus={() => setIsHovering(true)}
-      onBlur={() => setIsHovering(false)}
+      ref={ref}
+      // onMouseEnter={() => setIsHovering(true)}
+      // onMouseLeave={() => setIsHovering(false)}
+      // onFocus={() => setIsHovering(true)}
+      // onBlur={() => setIsHovering(false)}
       flexGrow={1}
       flexDir={"column"}
       maxW="300px"
@@ -59,11 +62,14 @@ function ProductCard({ productData }: ProductCardProps) {
         pos={"relative"}
         mb={`6px`}
         transform={
-          isHovering ? `scale(1) rotate(${0}deg)` : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
+          isHovering
+            ? `scale(1) rotate(${0}deg)`
+            : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
         }
         transition="transform 0.3s ease"
         bg={isImageIsLoading ? "gray" : undefined}
         borderRadius={16}
+        zIndex={1}
       >
         <Box pos={"relative"}>
           <Center borderRadius={16} pos="absolute" w="100%" h="100%">
@@ -140,13 +146,23 @@ function ProductCard({ productData }: ProductCardProps) {
           boxShadow={"md"}
           w="100%"
           justify="end"
-          h="125%"
+          h="150%"
           gap={1}
         >
           <></>
-          <Stack  direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" />}
+            spacing="0"
+            gap={1}
+          >
             <Flex flex={1} flexDir="column">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
@@ -165,7 +181,12 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Price
               </Text>
               <Heading textAlign="center" size="sm">
@@ -184,9 +205,19 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
           </Stack>
-          <Stack direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" />}
+            spacing="0"
+            gap={1}
+          >
             <Flex flex={1} flexDir="column" justify="center">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Category
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -194,7 +225,12 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column" justify="center">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Available Stock
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -213,10 +249,17 @@ function ProductCard({ productData }: ProductCardProps) {
           )}
           <ButtonGroup spacing="1">
             <Spacer />
-            <InputProductModal productData={productData} rightIcon={<EditIcon />} title={`Edit "${productData.name}"`}>
+            <InputProductModal
+              productData={productData}
+              rightIcon={<EditIcon />}
+              title={`Edit "${productData.name}"`}
+            >
               Edit
             </InputProductModal>
-            <DeleteProductButton productData={productData} rightIcon={<DeleteIcon />} />
+            <DeleteProductButton
+              productData={productData}
+              rightIcon={<DeleteIcon />}
+            />
           </ButtonGroup>
         </Stack>
       </Flex>

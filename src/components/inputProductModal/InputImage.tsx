@@ -2,45 +2,55 @@ import { Box, Flex, Input, Text } from "@chakra-ui/react";
 import { FormikProps } from "formik";
 import { FormikProductData } from "../../types";
 import { useState, useRef } from "react";
+import useFileDropZone from "../../hooks/useImageDropZone";
 function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(
-    formik.values?.image ?? null
-  );
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    const reader = new FileReader();
+  // const [selectedImage, setSelectedImage] = useState<string | null>(
+  //   formik.values?.image ?? null
+  // );
+  const {
+    dropZoneRef,
+    imageInputRef,
+    image,
+    imageName,
+    isDraggedOver,
+    isInValid,
+  } = useFileDropZone(formik.values.image);
+  // const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setSelectedImage(reader.result as string);
-    };
+  //   reader.onloadend = () => {
+  //     setSelectedImage(reader.result as string);
+  //   };
 
-    if (file) {
-      setSelectedFileName(file.name);
-      reader.readAsDataURL(file);
-    }
-  };
+  //   if (file) {
+  //     setSelectedFileName(file.name);
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  // const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const handleBoxClick = () => {
-    if (inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  };
+  // const handleBoxClick = () => {
+  //   if (inputFileRef.current) {
+  //     inputFileRef.current.click();
+  //   }
+  // };
   return (
-    <Flex flexDir="column">
-      {" "}
+    <Flex flexDir="column"> 
       <Box
-        backgroundImage={selectedImage ?? undefined}
+        backgroundImage={image ?? undefined}
         backgroundSize="cover"
         backgroundPosition="center"
         as="button"
-        onClick={handleBoxClick}
+        ref={dropZoneRef}
         boxSize="300px"
         borderRadius="lg"
-        borderWidth="4px"
-        borderColor="GrayText"
+        borderWidth={"4px"}
+        borderColor={isDraggedOver ? (isInValid ? "#E53E3E" : "#3182ce") : "GrayText"}
+        transform={`scale(${isDraggedOver ? 1.05 : 1})`}
+        transition="transform 0.3s ease"
         type="button"
       >
         <Box
@@ -54,23 +64,14 @@ function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
           <Text fontWeight="bold" fontSize="medium">
             Recommended resolution: 300x300
           </Text>
-          {selectedFileName && (
+          {imageName && (
             <Text fontWeight="bold" fontSize="medium">
-              Selected file: {selectedFileName}
+              Selected file: {imageName}
             </Text>
           )}
         </Box>
       </Box>
-      <Input
-        ref={inputFileRef}
-        type="file"
-        onChange={handleImageChange}
-        // onChange={(e) => {
-        //   e.preventDefault();
-        // }}
-        accept="image/*"
-        display="none"
-      />
+      <Input ref={imageInputRef} type="file" accept="image/*" display="none" />
     </Flex>
   );
 }

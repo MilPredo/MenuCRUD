@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { FormikProductData, ProductData } from "../../types";
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -12,13 +13,29 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Step,
+  StepDescription,
+  StepIcon,
+  StepIndicator,
+  StepNumber,
+  StepSeparator,
+  StepStatus,
+  StepTitle,
+  Stepper,
   useDisclosure,
+  useSteps,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import InputImage from "./InputImage";
 import InputProductDetails from "./InputProductDetails";
 import InputOptionSets from "./InputOptionSets";
+
+const steps = [
+  { title: "First", description: "Image" },
+  { title: "Second", description: "Details" },
+  { title: "Third", description: "Options" },
+];
 
 function InputProductModal({
   productData,
@@ -54,7 +71,10 @@ function InputProductModal({
     }
   );
   setFormProductData; //lol
-
+  const { activeStep, setActiveStep } = useSteps({
+    index: 1,
+    count: steps.length,
+  });
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     category: Yup.string().required("Category is required"),
@@ -91,7 +111,7 @@ function InputProductModal({
       validateForm(values).then((errors) => {
         console.log(errors);
       });
-      alert("Hallo");
+      // alert("Hallo");
       setTimeout(() => {
         alert(JSON.stringify(values, null, 2));
         setSubmitting(false);
@@ -128,6 +148,26 @@ function InputProductModal({
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
+              <Stepper index={activeStep}>
+                {steps.map((step, index) => (
+                  <Step key={index}>
+                    <StepIndicator>
+                      <StepStatus
+                        complete={<StepIcon />}
+                        incomplete={<StepNumber />}
+                        active={<StepNumber />}
+                      />
+                    </StepIndicator>
+
+                    <Box flexShrink="0">
+                      <StepTitle>{step.title}</StepTitle>
+                      <StepDescription>{step.description}</StepDescription>
+                    </Box>
+
+                    <StepSeparator />
+                  </Step>
+                ))}
+              </Stepper>
               <Stack
                 divider={<Divider orientation="vertical" />}
                 spacing="0"

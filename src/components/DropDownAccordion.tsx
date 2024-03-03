@@ -64,7 +64,7 @@ const DropDownAccordion = ({
         <Box
           pos={"absolute"}
           ref={boxRef}
-          zIndex={1}
+          zIndex={2}
           overflow="hidden"
           transition="max-height 0.3s ease, opacity 0.1s ease, transform 0.2s ease"
           transform={isOpen ? "translateY(10px)" : "translateY(0px)"}
@@ -74,6 +74,7 @@ const DropDownAccordion = ({
           borderRadius={16}
           borderWidth={2}
           bg={"white"}
+          
         >
           <Box p={2}>{children}</Box>
         </Box>
