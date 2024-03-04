@@ -13,21 +13,38 @@ const useImageDropZone = (initialImage?: string) => {
   useEffect(() => {
     const handleDragEnter = (e: DragEvent) => {
       e.preventDefault();
+      // const file = e.dataTransfer?.files[0];
+      // if (file) {
+      //   if (file.type.startsWith("image/")) {
+      //     setIsInValid(true);
+      //     console.log("handleDragEnter file is invalid");
+      //   } else {
+      //     setIsInValid(false);
+      //     console.log("handleDragEnter file is valid");
+      //   }
+      // }
       setIsDraggedOver(true);
     };
 
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
-      const file = e.dataTransfer?.files[0];
-      if (file && !file.type.startsWith("image/")) {
-        setIsInValid(true);
-      }
+      // const file = e.dataTransfer?.files[0];
+      // console.log(file)
+      // if (file) {
+      //   console.log("handleDragEnter file is invalid");
+      //   if (file.type.startsWith("image/")) {
+      //     setIsInValid(true);
+      //     console.log("handleDragEnter file is invalid");
+      //   } else {
+      //     setIsInValid(false);
+      //     console.log("handleDragEnter file is valid");
+      //   }
+      // }
       setIsDraggedOver(true);
     };
 
     const handleDragLeave = () => {
       setIsDraggedOver(false);
-
       setIsInValid(false);
     };
 
@@ -36,13 +53,15 @@ const useImageDropZone = (initialImage?: string) => {
       setIsDraggedOver(false);
       const file = e.dataTransfer?.files[0];
       if (file && file.type.startsWith("image/")) {
+        setIsInValid(false);
         const reader = new FileReader();
         reader.onloadend = () => {
           setImage(reader.result as string);
         };
         reader.readAsDataURL(file);
         setImageName(file.name);
-      } else {
+      }else{
+        alert("Invalid file. Please drop an image file.")
         setIsInValid(true);
       }
     };
