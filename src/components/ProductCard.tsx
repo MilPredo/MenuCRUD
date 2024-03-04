@@ -166,10 +166,10 @@ function ProductCard({ productData }: ProductCardProps) {
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize={(productData.basePrice).toString().split('').length > 3 ? "18px" : "24px"}>
+                <Heading as="span" fontSize={(productData.baseCost).toString().split('').length > 3 ? "18px" : "24px"}>
                   ₱
                 </Heading>
-                <Heading as="span" size={(productData.basePrice).toString().split('').length > 3 ? "md" : "lg"}>
+                <Heading as="span" size={(productData.baseCost).toString().split('').length > 3 ? "md" : "lg"}>
                   {formatCurrency(productData.baseCost).whole}
                 </Heading>
                 <Heading as="span" size="sm">

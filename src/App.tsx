@@ -173,7 +173,7 @@ function App() {
         "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/719f1aa1501e443bb1856bce121e74d6/BFV41761_DeliciousAsianDrinks_FBFINAL_v5.jpg",
       imageAlt: "hehe",
       baseCost: 50,
-      basePrice: 70,
+      basePrice: 7000,
       category: "Water-Based",
       stock: 100,
       optionSets: [

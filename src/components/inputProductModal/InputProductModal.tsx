@@ -52,14 +52,12 @@ function InputProductModal({
   children: ReactNode;
   colorScheme?: string;
   borderRadius?: number | string;
-  rightIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
-  leftIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
+  rightIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
+  leftIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [image, setImage] = useState<string | null>(productData?.image ?? "");
+  const [imageName, setImageName] = useState<string | undefined>();
   const [formProductData, setFormProductData] = useState<FormikProductData>(
     productData ?? {
       name: "",
@@ -71,7 +69,19 @@ function InputProductModal({
       stock: "",
     }
   );
-  setFormProductData; //lol
+
+  // function handleImageChange(image: string | null, imageName: string | undefined) {
+  //   setImage(image);
+  //   setImageName(imageName);
+  // }
+
+  function handleClose() {
+    formik.resetForm();
+    setActiveStep(1);
+    setImage(productData?.image ?? "");
+    setImageName(undefined);
+    onClose();
+  }
   const { activeStep, setActiveStep } = useSteps({
     index: 1,
     count: steps.length,
@@ -90,9 +100,7 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required(
-              "Option Item Name is required"
-            ),
+            optionItemName: Yup.string().required("Option Item Name is required"),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -109,8 +117,10 @@ function InputProductModal({
     initialValues: formProductData,
     validationSchema: validationSchema,
     onSubmit: (values, { validateForm, setSubmitting }) => {
+      alert("ahahhah");
       validateForm(values).then((errors) => {
         console.log(errors);
+        alert(errors);
       });
       // alert("Hallo");
       setTimeout(() => {
@@ -118,8 +128,16 @@ function InputProductModal({
         setSubmitting(false);
       }, 400);
     },
-    validateOnMount: true,
   });
+
+  React.useEffect(() => {
+    const errors = formik.errors;
+    if (!formik.isValid && formik.isSubmitting) {
+      alert("Your form is invalid, please check for required fields.");
+      //Might remove it depending on how adding options would work.
+      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
+    }
+  }, [formik.isSubmitting]);
   return (
     <>
       <Button
@@ -133,36 +151,19 @@ function InputProductModal({
       >
         {children}
       </Button>
-      <Modal
-        size="xl"
-        isOpen={isOpen}
-        onClose={() => {
-          // setSelectedImage(productData?.image ?? null);
-          // setSelectedFileName(null);
-          formik.resetForm();
-          onClose();
-        }}
-      >
+      <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
           <form onSubmit={formik.handleSubmit}>
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack
-                divider={<Divider orientation="vertical" />}
-                spacing="0"
-                gap={4}
-              >
+              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus
-                          complete={<StepIcon />}
-                          incomplete={<StepNumber />}
-                          active={<StepNumber />}
-                        />
+                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -174,52 +175,46 @@ function InputProductModal({
                     </Step>
                   ))}
                 </Stepper>
-                {activeStep === 1 && <InputImage formik={formik} />}
-                {activeStep === 2 && <InputProductDetails formik={formik} />}
-                {activeStep === 3 && <InputOptionSets formik={formik} />}
+                <Flex flexDir="row" align="center" justify="center" minH="300px">
+                  {activeStep === 1 && (
+                    <InputImage
+                      newImage={image}
+                      newImageName={imageName}
+                      setImage={setImage}
+                      setImageName={setImageName}
+                      formik={formik}
+                    />
+                  )}
+                  {activeStep === 2 && <InputProductDetails formik={formik} />}
+                  {activeStep === 3 && <InputOptionSets formik={formik} />}
+                </Flex>
               </Stack>
             </ModalBody>
-
             <ModalFooter>
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  onClick={() => {
-                    formik.resetForm();
-                    onClose();
-                  }}
-                  type="button"
-                >
+                <Button variant="solid" onClick={handleClose} type="button">
                   Close
                 </Button>
 
                 <Button
-                  // type="submit"
                   isDisabled={activeStep === 1}
                   colorScheme="blue"
                   onClick={() => {
                     setActiveStep(Math.min(Math.max(activeStep - 1, 1), 3));
                   }}
-                  // isLoading={formik.isSubmitting}
                 >
                   Previous
                 </Button>
                 <Button
                   isDisabled={activeStep === 3}
                   colorScheme="blue"
-                  onClick={() => {
+                  onClick={async () => {
                     setActiveStep(Math.min(Math.max(activeStep + 1, 0), 3));
                   }}
                 >
                   Next
                 </Button>
-
-                <Button
-                  isDisabled={activeStep !== 3}
-                  type="submit"
-                  colorScheme="green"
-                  isLoading={formik.isSubmitting}
-                >
+                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
                   Save
                 </Button>
               </ButtonGroup>

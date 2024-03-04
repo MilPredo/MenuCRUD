@@ -6,17 +6,23 @@ import useHover from "../../hooks/useHover";
 import { useEffect, useRef } from "react";
 // import useMultiRef from "../../hooks/useMultiRef";
 
-function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
-  const {
-    dropZoneRef,
-    imageInputRef,
-    image,
-    imageName,
-    isDraggedOver,
-    isInValid,
-  } = useFileDropZone(formik.values.image);
+function InputImage({
+  formik,
+  newImage,
+  newImageName,
+  setImage,
+  setImageName,
+}: {
+  formik: FormikProps<FormikProductData>;
+  newImage?: string | null;
+  newImageName?: string;
+  setImage: React.Dispatch<React.SetStateAction<string | null>>;
+  setImageName: React.Dispatch<React.SetStateAction<string | undefined>>;
+}) {
+  const { dropZoneRef, imageInputRef, image, imageName, isDraggedOver, isInValid } = useFileDropZone(
+    newImage ?? formik.values.image
+  );
   const { ref, isHovering } = useHover();
-  // const combinedRef = useMultiRef(ref, dropZoneRef);
   const combinedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,6 +31,11 @@ function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
     //@ts-ignore
     ref.current = combinedRef.current;
   }, [dropZoneRef, ref]);
+  useEffect(() => {
+    //formik.values.image = image ?? undefined;
+    setImage(image);
+    setImageName(imageName);
+  }, [image]);
   return (
     <Flex flexDir="column" align="center">
       <Box
@@ -36,21 +47,13 @@ function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
         boxSize="300px"
         borderRadius="lg"
         borderWidth={"4px"}
-        borderColor={
-          isDraggedOver ? (isInValid ? "#E53E3E" : "#3182ce") : "GrayText"
-        }
+        borderColor={isDraggedOver ? (isInValid ? "#E53E3E" : "#3182ce") : "GrayText"}
         transform={`scale(${isDraggedOver || isHovering ? 1.05 : 1})`}
         transition="transform 0.3s ease"
         type="button"
       >
         <Center>
-          <Square
-            size="50%"
-            flexDir="column"
-            bg="rgba(255,255,255,0.6)"
-            backdropFilter={"blur(4px)"}
-            borderRadius="lg"
-          >
+          <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
             </Text>
@@ -62,13 +65,13 @@ function InputImage({ formik }: { formik: FormikProps<FormikProductData> }) {
         </Center>
       </Box>
       <Input ref={imageInputRef} type="file" accept="image/*" display="none" />
-      {imageName && (
+      {(imageName ?? newImageName) && (
         <Text m="2">
           <Text as="span" fontWeight="bold" fontSize="medium">
             Selected file:{" "}
           </Text>
           <Text as="span" fontWeight="bold" fontSize="large" color="#3182ce">
-            {imageName}
+            {imageName ?? newImageName}
           </Text>
         </Text>
       )}

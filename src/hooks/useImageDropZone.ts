@@ -60,8 +60,8 @@ const useImageDropZone = (initialImage?: string) => {
         };
         reader.readAsDataURL(file);
         setImageName(file.name);
-      }else{
-        alert("Invalid file. Please drop an image file.")
+      } else {
+        alert("Invalid file. Please drop an image file.");
         setIsInValid(true);
       }
     };
@@ -70,6 +70,7 @@ const useImageDropZone = (initialImage?: string) => {
       e.preventDefault();
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file && file.type.startsWith("image/")) {
+        setIsInValid(false);
         const reader = new FileReader();
         reader.onloadend = () => {
           setImage(reader.result as string);
