@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ProductCardProps } from "../types";
 import {
   Box,
+  Button,
   ButtonGroup,
   Center,
   Divider,
@@ -10,6 +11,7 @@ import {
   Image,
   Spacer,
   Spinner,
+  Square,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -27,23 +29,29 @@ import useHover from "../hooks/useHover";
 
 function ProductCard({ productData }: ProductCardProps) {
   // const [isHovering, setIsHovering] = useState(false);
-  const [isImageIsLoading, setIsImageLoading] = useState(true);
+  const [ImageLoading, setIsImageLoading] = useState(true);
   const { ref, isHovering } = useHover();
 
   function formatCurrency(amount: number) {
+    console.log("hallo")
     const roundedAmount = Math.round(amount * 100) / 100;
     const formattedAmount = roundedAmount.toLocaleString("en-PH", {
       style: "currency",
       currency: "PHP",
     });
     const [whole, fraction] = formattedAmount.split(".");
-    console.log(whole);
     let a = whole.split("");
     a.shift();
-    console.log(whole);
     return { whole: a, fraction };
   }
-
+  const formattedCost = useMemo(
+    () => formatCurrency(productData.baseCost),
+    [productData.baseCost]
+  );
+  const formattedPrice = useMemo(
+    () => formatCurrency(productData.basePrice),
+    [productData.basePrice]
+  );
   return (
     <Flex
       ref={ref}
@@ -53,11 +61,12 @@ function ProductCard({ productData }: ProductCardProps) {
       // onBlur={() => setIsHovering(false)}
       flexGrow={1}
       flexDir={"column"}
-      maxW="300px"
-      p={2}
-      gap={2}
+      // maxW="300px"
+      w="100%"
+      // p={2}
+      // gap={2}
     >
-      <Box
+      <Flex
         mx={4}
         pos={"relative"}
         mb={`6px`}
@@ -67,15 +76,15 @@ function ProductCard({ productData }: ProductCardProps) {
             : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
         }
         transition="transform 0.3s ease"
-        bg={isImageIsLoading ? "gray" : undefined}
+        // bg={ImageLoading ? "gray" : undefined}
         borderRadius={16}
         zIndex={1}
       >
-        <Box pos={"relative"}>
+        <Flex pos={"relative"} flexDir="column" aspectRatio={1} minW="100%" bg="gray.100" borderRadius={16}>
           <Center borderRadius={16} pos="absolute" w="100%" h="100%">
-            {isImageIsLoading && <Spinner />}
+            {ImageLoading && <Spinner />}
           </Center>
-          <Box
+          <Flex
             borderRadius={16}
             pos="absolute"
             w="100%"
@@ -85,7 +94,7 @@ function ProductCard({ productData }: ProductCardProps) {
                 ? `md`
                 : `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 0 150px -75px rgba(0, 0, 0, 1)`
             }
-            opacity={isImageIsLoading ? "0" : "1"}
+            opacity={ImageLoading ? "0" : "1"}
             transition="box-shadow 0.3s ease, opacity 0.5s ease 1s"
           />
           <Image
@@ -96,22 +105,23 @@ function ProductCard({ productData }: ProductCardProps) {
             onLoad={() => {
               setIsImageLoading(false);
             }}
-            opacity={isImageIsLoading ? "0" : "1"}
+            opacity={ImageLoading ? "0" : "1"}
             // opacity={0}
             transition="opacity 1s ease"
             aspectRatio={1 / 1}
             objectFit="cover"
-            fallbackSrc={placeHolderImg}
-            width="100%" // Ensure consistent width for both loaded and placeholder images
-            height="100%" // Ensure consistent height for both loaded and placeholder images
+            // fallbackSrc={placeHolderImg}
+            // width="100%" // Ensure consistent width for both loaded and placeholder images
+            // height="100%" // Ensure consistent height for both loaded and placeholder images
           />
-        </Box>
+        </Flex>
         <Box
           overflow={"auto"}
           // ref={titleRef}
           maxW={300}
           boxShadow={"md"}
           pos={"absolute"}
+          top={"100%"}
           left={"50%"}
           transform={
             isHovering
@@ -135,7 +145,7 @@ function ProductCard({ productData }: ProductCardProps) {
             </Heading>
           </Box>
         </Box>
-      </Box>
+      </Flex>
       <Flex align="end">
         <Stack
           divider={<Divider />}
@@ -156,7 +166,7 @@ function ProductCard({ productData }: ProductCardProps) {
             spacing="0"
             gap={1}
           >
-            <Flex flex={1} flexDir="column"  justify="space-between">
+            <Flex flex={1} flexDir="column" justify="space-between">
               <Text
                 fontWeight={"600"}
                 textAlign="center"
@@ -166,17 +176,31 @@ function ProductCard({ productData }: ProductCardProps) {
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize={(productData.baseCost).toString().split('').length > 3 ? "18px" : "24px"}>
+                <Heading
+                  as="span"
+                  fontSize={
+                    formattedCost.whole.toString().split("").length > 3
+                      ? "18px"
+                      : "24px"
+                  }
+                >
                   ₱
                 </Heading>
-                <Heading as="span" size={(productData.baseCost).toString().split('').length > 3 ? "md" : "lg"}>
-                  {formatCurrency(productData.baseCost).whole}
+                <Heading
+                  as="span"
+                  size={
+                    formattedCost.whole.toString().split("").length > 3
+                      ? "md"
+                      : "lg"
+                  }
+                >
+                  {formattedCost.whole}
                 </Heading>
                 <Heading as="span" size="sm">
                   .
                 </Heading>
                 <Heading as="span" fontSize="12px">
-                  {formatCurrency(productData.baseCost).fraction}
+                  {formattedCost.fraction}
                 </Heading>
               </Heading>
             </Flex>
@@ -190,17 +214,31 @@ function ProductCard({ productData }: ProductCardProps) {
                 Price
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize={(productData.basePrice).toString().split('').length > 3 ? "18px" : "24px"}>
+                <Heading
+                  as="span"
+                  fontSize={
+                    formattedPrice.whole.toString().split("").length > 3
+                      ? "18px"
+                      : "24px"
+                  }
+                >
                   ₱
                 </Heading>
-                <Heading as="span" size={(productData.basePrice).toString().split('').length > 3 ? "md" : "lg"}>
-                  {formatCurrency(productData.basePrice ).whole}
+                <Heading
+                  as="span"
+                  size={
+                    formattedPrice.whole.toString().split("").length > 3
+                      ? "md"
+                      : "lg"
+                  }
+                >
+                  {formattedPrice.whole}
                 </Heading>
                 <Heading as="span" size="sm">
                   .
                 </Heading>
                 <Heading as="span" fontSize="12px">
-                  {formatCurrency(productData.basePrice).fraction}
+                  {formattedPrice.fraction}
                 </Heading>
               </Heading>
             </Flex>
@@ -253,9 +291,19 @@ function ProductCard({ productData }: ProductCardProps) {
               productData={productData}
               rightIcon={<EditIcon />}
               title={`Edit "${productData.name}"`}
-            >
-              Edit
-            </InputProductModal>
+              button={(onOpen) => (
+                <Button
+                  onClick={onOpen}
+                  borderRadius={8}
+                  rightIcon={<EditIcon />}
+                  variant="solid"
+                  colorScheme={"blue"}
+                  size="sm"
+                >
+                  Edit
+                </Button>
+              )}
+            />
             <DeleteProductButton
               productData={productData}
               rightIcon={<DeleteIcon />}

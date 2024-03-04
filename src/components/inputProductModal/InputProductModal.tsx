@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { FormikProductData, ProductData } from "../../types";
 import {
   Box,
@@ -41,19 +41,23 @@ const steps = [
 function InputProductModal({
   productData,
   title,
-  children,
   colorScheme,
   borderRadius,
   rightIcon,
   leftIcon,
+  button,
 }: {
   productData?: ProductData;
   title: string;
-  children: ReactNode;
   colorScheme?: string;
   borderRadius?: number | string;
-  rightIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
-  leftIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
+  rightIcon?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | undefined;
+  leftIcon?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | undefined;
+  button?: (onOpen: () => void) => React.ReactElement<HTMLButtonElement>;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [image, setImage] = useState<string | null>(productData?.image ?? "");
@@ -100,7 +104,9 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required("Option Item Name is required"),
+            optionItemName: Yup.string().required(
+              "Option Item Name is required"
+            ),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -135,22 +141,20 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
+      if (
+        errors.baseCost ||
+        errors.basePrice ||
+        errors.category ||
+        errors.name ||
+        errors.stock
+      )
+        setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
     <>
-      <Button
-        onClick={onOpen}
-        borderRadius={borderRadius ?? 8}
-        rightIcon={rightIcon}
-        leftIcon={leftIcon}
-        variant="solid"
-        colorScheme={colorScheme ?? "blue"}
-        size="sm"
-      >
-        {children}
-      </Button>
+      { button ? button(onOpen) : undefined}
+
       <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
@@ -158,12 +162,20 @@ function InputProductModal({
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
+              <Stack
+                divider={<Divider orientation="vertical" />}
+                spacing="0"
+                gap={4}
+              >
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -175,7 +187,12 @@ function InputProductModal({
                     </Step>
                   ))}
                 </Stepper>
-                <Flex flexDir="row" align="center" justify="center" minH="300px">
+                <Flex
+                  flexDir="row"
+                  align="center"
+                  justify="center"
+                  minH="300px"
+                >
                   {activeStep === 1 && (
                     <InputImage
                       newImage={image}
@@ -214,7 +231,12 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
+                <Button
+                  isDisabled={activeStep !== 3}
+                  type="submit"
+                  colorScheme="green"
+                  isLoading={formik.isSubmitting}
+                >
                   Save
                 </Button>
               </ButtonGroup>

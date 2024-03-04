@@ -36,11 +36,13 @@ const DropDownAccordion = ({
         flexDir={"row"}
         justify={"space-between"}
         borderRadius="md"
-        _hover={{ bg: "gray.100" }}
-        transition="background-color 0.3s ease-out"
+        _hover={{ boxShadow:"0px 0px 0px 2px rgba(49, 130, 206, 2) inset", transform: "scale(1.05)"}}
+        transition="all 0.3s ease"
         align={"center"}
         as="button"
         onClick={toggleAccordion}
+        borderWidth="1px"
+        borderColor="#E2E8F0"
       >
         <Stack
           direction="row"

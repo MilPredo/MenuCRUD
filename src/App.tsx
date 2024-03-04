@@ -1,4 +1,4 @@
-import {} from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   ChakraProvider,
   Flex,
@@ -6,6 +6,9 @@ import {
   Heading,
   Grid,
   GridItem,
+  Box,
+  Square,
+  Center,
 } from "@chakra-ui/react";
 import { ProductData } from "./types";
 import AddProductCard from "./components/AddProductCard";
@@ -26,6 +29,7 @@ import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
 import AddProductCard2 from "./components/AddProductCard2";
 import InputProductModal from "./components/inputProductModal/InputProductModal";
+import useHover from "./hooks/useHover";
 const customTheme = extendTheme({
   fonts: {
     body: "''Quicksand', sans-serif'",
@@ -213,6 +217,7 @@ function App() {
     },
   ];
 
+  // const { ref, isHovering } = useHover();
   return (
     <ChakraProvider theme={customTheme}>
       <Flex
@@ -242,44 +247,24 @@ function App() {
           <Flex flex={1}></Flex>
         </Flex>
         <Flex flexDir={"column"} align="center" h="100%" overflow="auto">
-          <Grid maxW="1280px" templateColumns="repeat(5, 1fr)" gap={2}>
+          <Grid
+            w="1280px"
+            templateColumns="repeat(5, 1fr)" 
+            gap={2}
+            p={2}
+            mt={4}
+          >
             <GridItem flexDir={"column"}>
-              <Flex flexDir="column" align="center" h="100%">
-                <Flex>
-                  <InputProductModal title="Add Item">Add</InputProductModal>
-                </Flex>
-              </Flex>
+              <AddProductCard2   />
             </GridItem>
-            {mockData.map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
-                <Flex flexDir="column" align="center" h="100%">
-                  <ProductCard productData={data} />
-                </Flex>
-              </GridItem>
-            ))}
-            {mockData.map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
-                <Flex flexDir="column" align="center" h="100%">
-                  <ProductCard productData={data} />
-                </Flex>
-              </GridItem>
-            ))}
-            {mockData.map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
-                <Flex flexDir="column" align="center" h="100%">
-                  <ProductCard productData={data} />
-                </Flex>
-              </GridItem>
-            ))}
-            {mockData.map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
-                <Flex flexDir="column" align="center" h="100%">
-                  <ProductCard productData={data} />
-                </Flex>
-              </GridItem>
-            ))}
-            {mockData.map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
+            {[
+              ...mockData,
+              ...mockData,
+              ...mockData,
+              ...mockData,
+              ...mockData,
+            ].map((data, key) => (
+              <GridItem key={data.name + key} flexDir={"column"}  >
                 <Flex flexDir="column" align="center" h="100%">
                   <ProductCard productData={data} />
                 </Flex>
