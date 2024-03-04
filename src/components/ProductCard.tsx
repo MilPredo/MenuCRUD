@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { ProductCardProps } from "../types";
 import {
   Box,
@@ -11,7 +11,6 @@ import {
   Image,
   Spacer,
   Spinner,
-  Square,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -295,7 +294,6 @@ function ProductCard({ productData }: ProductCardProps) {
             <Spacer />
             <InputProductModal
               productData={productData}
-              rightIcon={<EditIcon />}
               title={`Edit "${productData.name}"`}
               button={(onOpen) => (
                 <Button

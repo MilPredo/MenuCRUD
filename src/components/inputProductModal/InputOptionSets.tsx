@@ -1,7 +1,6 @@
 import { FormikProps } from "formik";
 import { FormikProductData, Option, OptionSet } from "../../types";
 import {
-  Box,
   Button,
   Divider,
   Flex,
@@ -94,7 +93,7 @@ function InputOptionSets({
         </Button>
       </Flex>
 
-      <VStack>
+      <VStack flexDir="column-reverse">
         {tempOptionSets.map((optionSet, index) => (
           <Flex
             flexDir="column"
@@ -192,6 +191,12 @@ function InputOptionSets({
                 >
                   <Text fontSize="18px" fontWeight="600">
                     {option.optionItemName}
+                  </Text>
+                  <Text fontSize="18px" fontWeight="600">
+                    Cost +{option.costModifier}
+                  </Text>
+                  <Text fontSize="18px" fontWeight="600">
+                    Price +{option.priceModifier}
                   </Text>
                   <Button
                     size="sm"

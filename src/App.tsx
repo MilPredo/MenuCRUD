@@ -1,4 +1,3 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
   ChakraProvider,
   Flex,
@@ -6,9 +5,6 @@ import {
   Heading,
   Grid,
   GridItem,
-  Box,
-  Square,
-  Center,
 } from "@chakra-ui/react";
 import { ProductData } from "./types";
 import ProductCard from "./components/ProductCard";
@@ -27,8 +23,6 @@ import "@fontsource-variable/hepta-slab";
 import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
 import AddProductCard from "./components/AddProductCard";
-import InputProductModal from "./components/inputProductModal/InputProductModal";
-import useHover from "./hooks/useHover";
 const customTheme = extendTheme({
   fonts: {
     body: "''Quicksand', sans-serif'",

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormikProductData, ProductData } from "../../types";
 import {
   Box,
@@ -41,22 +41,10 @@ const steps = [
 function InputProductModal({
   productData,
   title,
-  colorScheme,
-  borderRadius,
-  rightIcon,
-  leftIcon,
   button,
 }: {
   productData?: ProductData;
   title: string;
-  colorScheme?: string;
-  borderRadius?: number | string;
-  rightIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
-  leftIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
   button?: (onOpen: () => void) => React.ReactElement<HTMLButtonElement>;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -74,11 +62,7 @@ function InputProductModal({
     }
   );
 
-  // function handleImageChange(image: string | null, imageName: string | undefined) {
-  //   setImage(image);
-  //   setImageName(imageName);
-  // }
-
+  setFormProductData; //haaaaaax
   function handleClose() {
     formik.resetForm();
     setActiveStep(1);
@@ -153,7 +137,7 @@ function InputProductModal({
   }, [formik.isSubmitting]);
   return (
     <>
-      { button ? button(onOpen) : undefined}
+      {button ? button(onOpen) : undefined}
 
       <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(2px)" />
@@ -161,7 +145,7 @@ function InputProductModal({
           <form onSubmit={formik.handleSubmit}>
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
-            <ModalBody >
+            <ModalBody>
               <Stack
                 divider={<Divider orientation="vertical" />}
                 spacing="0"
@@ -187,10 +171,7 @@ function InputProductModal({
                     </Step>
                   ))}
                 </Stepper>
-                <Flex
-                  flexDir="column" 
-                  minH="300px"
-                >
+                <Flex flexDir="column" minH="300px">
                   {activeStep === 1 && (
                     <InputImage
                       newImage={image}
