@@ -13,33 +13,11 @@ const useImageDropZone = (initialImage?: string) => {
   useEffect(() => {
     const handleDragEnter = (e: DragEvent) => {
       e.preventDefault();
-      // const file = e.dataTransfer?.files[0];
-      // if (file) {
-      //   if (file.type.startsWith("image/")) {
-      //     setIsInValid(true);
-      //     console.log("handleDragEnter file is invalid");
-      //   } else {
-      //     setIsInValid(false);
-      //     console.log("handleDragEnter file is valid");
-      //   }
-      // }
       setIsDraggedOver(true);
     };
 
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
-      // const file = e.dataTransfer?.files[0];
-      // console.log(file)
-      // if (file) {
-      //   console.log("handleDragEnter file is invalid");
-      //   if (file.type.startsWith("image/")) {
-      //     setIsInValid(true);
-      //     console.log("handleDragEnter file is invalid");
-      //   } else {
-      //     setIsInValid(false);
-      //     console.log("handleDragEnter file is valid");
-      //   }
-      // }
       setIsDraggedOver(true);
     };
 

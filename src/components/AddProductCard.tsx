@@ -1,91 +1,46 @@
-import { AddIcon } from "@chakra-ui/icons";
-import { Box, Flex, Image } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+
+import {
+  Box,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import InputProductModal from "./inputProductModal/InputProductModal";
-import { placeHolderImg } from "../assets/300";
+import { AddIcon } from "@chakra-ui/icons";
+
+import "@fontsource-variable/quicksand";
+import "@fontsource/anton";
+import "@fontsource/poppins/800.css";
+import useHover from "../hooks/useHover";
 
 function AddProductCard() {
-  // const titleRef = useRef<HTMLDivElement | null>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [randomNumber, setRandomNumber] = useState(Math.random());
-  useEffect(() => {
-    setRandomNumber(Math.random());
-  }, []);
+  const {ref, isHovering} = useHover()
   return (
-    <Flex flexGrow={1} flexDir={"column"} maxW="300" p={2} gap={2}>
-      <Box
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        onFocus={() => setIsHovering(true)}
-        onBlur={() => setIsHovering(false)}
-        pos={"relative"}
-        mb={`6px`}
-        
-        transform={
-          isHovering
-            ? `scale(1) rotate(${0}deg)`
-            : `scale(0.85) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
-        }
-        transition="transform 0.3s ease"
-      >
-        <Box pos={"relative"}>
-          <Box
-            borderRadius={16}
-            pos="absolute"
-            w="100%"
-            h="100%"
-            boxShadow={
-              isHovering
-                ? `md`
-                : `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 0 150px -75px rgba(0, 0, 0, 1)`
-            }
-            transition="box-shadow 0.3s ease"
-          />
-          <Image
-            borderRadius={16}
-            //0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06),
-            // w={"300px"}
-            // h={"300px"}
-            // boxShadow={"inset 0 0 10px rgba(0, 0, 0, 0.5)"}
-            // style={{
-            //   boxShadow: "inset 0 0 10px rgba(0, 0, 0, 0.5)"
-            // }}
-            aspectRatio={1 / 1}
-            objectFit="cover"
-            bgPosition="center"
-            src={
-              "https://image.pollinations.ai/prompt/" +
-              `Milkshake, milktea, tea, straw, cup, mug, tapioca pearls, pearls, cookies, cream, food, drink, dessert${randomNumber}`
-            } //
-            fallbackSrc={placeHolderImg}
-          />
-        </Box>
-        <Box
-          overflow={"auto"}
-          // ref={titleRef}
-          maxW={300}
-          // boxShadow={"0 4px 6px rgba(50, 50, 93, 1), 0 1px 3px rgba(0, 0, 0, 0.5)"}
+    <Flex flexDir="column" align="center" h="100%">
+      <Flex pos="relative" w="100%" flex={1}></Flex>
+      <Flex w="100%" flex={1} align="flex-end">
+        <Flex
+          justify="center"
+          align="center"
+          w="100%"
+          h="150%"
+          flex={1}
+          bg="white"
+          borderRadius={16}
           boxShadow={"md"}
-          pos={"absolute"}
-          left={"50%"}
-          transform={
-            isHovering
-              ? `translate(-50%, -75%) rotate(${0}deg)`
-              : `translate(-50%, -60%) rotate(${Math.random() * 6 - 3}deg)`
-          }
-          transition="transform 0.3s ease"
-          borderRadius={"8px"}
         >
-          <InputProductModal
-            borderRadius={"8px"}
-            colorScheme="green"
-            rightIcon={<AddIcon />}
-            title="Add Item"
-          >
-            Add Item
-          </InputProductModal>
-        </Box>
-      </Box>
+          <Flex>
+            <InputProductModal
+              title="Add Item"
+              button={(onOpen) => (
+                <Box as="button" onClick={onOpen} ref={ref} p={5} borderRadius={16} transform={`scale(${isHovering?1.1:1})`} transition="transform 0.3s ease" borderWidth="2px" borderColor="gray" borderStyle="dashed">
+                  <AddIcon fontSize="32px"/>
+                  <Text fontSize="32px" >Add Item</Text>
+                </Box>
+              )}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
     </Flex>
   );
 }

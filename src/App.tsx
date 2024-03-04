@@ -11,7 +11,6 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { ProductData } from "./types";
-import AddProductCard from "./components/AddProductCard";
 import ProductCard from "./components/ProductCard";
 // import { motion } from "framer-motion";
 /*
@@ -27,7 +26,7 @@ import "@fontsource-variable/quicksand";
 import "@fontsource-variable/hepta-slab";
 import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
-import AddProductCard2 from "./components/AddProductCard2";
+import AddProductCard from "./components/AddProductCard";
 import InputProductModal from "./components/inputProductModal/InputProductModal";
 import useHover from "./hooks/useHover";
 const customTheme = extendTheme({
@@ -222,11 +221,10 @@ function App() {
     <ChakraProvider theme={customTheme}>
       <Flex
         flexDir={"column"}
-        backgroundColor={"#ead9c8"} //{"#f9f3ec"}
+        backgroundColor={"#ead9c8"}
         h={"100vh"}
         overflow="hidden"
       >
-        {/* <Container maxW="2xl"> */}
         <Flex align="center" boxShadow="md" bg="white">
           <Flex flex={1}>
             <Heading
@@ -249,13 +247,13 @@ function App() {
         <Flex flexDir={"column"} align="center" h="100%" overflow="auto">
           <Grid
             w="1280px"
-            templateColumns="repeat(5, 1fr)" 
+            templateColumns="repeat(5, 1fr)"
             gap={2}
             p={2}
             mt={4}
           >
             <GridItem flexDir={"column"}>
-              <AddProductCard2   />
+              <AddProductCard />
             </GridItem>
             {[
               ...mockData,
@@ -264,25 +262,14 @@ function App() {
               ...mockData,
               ...mockData,
             ].map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}  >
+              <GridItem key={data.name + key} flexDir={"column"}>
                 <Flex flexDir="column" align="center" h="100%">
                   <ProductCard productData={data} />
                 </Flex>
               </GridItem>
             ))}
           </Grid>
-          {/* <Wrap justify='right' maxW={{sm: "720px", base:"1280px"}} bg='green'>
-            <WrapItem flexDir={"column"}>
-              <AddProductCard />
-            </WrapItem>
-            {mockData.map((data, key) => (
-              <WrapItem key={data.name + key} flexDir={"column"} maxWidth="300px">
-                <ProductCard productData={data} />
-              </WrapItem>
-            ))}
-          </Wrap> */}
         </Flex>
-        {/* </Container> */}
       </Flex>
     </ChakraProvider>
   );

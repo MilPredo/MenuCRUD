@@ -24,7 +24,6 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import "@fontsource-variable/quicksand";
 import "@fontsource/anton";
 import "@fontsource/poppins/800.css";
-import { placeHolderImg } from "../assets/300";
 import useHover from "../hooks/useHover";
 
 function ProductCard({ productData }: ProductCardProps) {
@@ -33,7 +32,7 @@ function ProductCard({ productData }: ProductCardProps) {
   const { ref, isHovering } = useHover();
 
   function formatCurrency(amount: number) {
-    console.log("hallo")
+    console.log("hallo");
     const roundedAmount = Math.round(amount * 100) / 100;
     const formattedAmount = roundedAmount.toLocaleString("en-PH", {
       style: "currency",
@@ -80,7 +79,14 @@ function ProductCard({ productData }: ProductCardProps) {
         borderRadius={16}
         zIndex={1}
       >
-        <Flex pos={"relative"} flexDir="column" aspectRatio={1} minW="100%" bg="gray.100" borderRadius={16}>
+        <Flex
+          pos={"relative"}
+          flexDir="column"
+          aspectRatio={1}
+          minW="100%"
+          bg="gray.100"
+          borderRadius={16}
+        >
           <Center borderRadius={16} pos="absolute" w="100%" h="100%">
             {ImageLoading && <Spinner />}
           </Center>

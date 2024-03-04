@@ -30,7 +30,7 @@ export type ProductData = {
   image?: string;
   imageAlt?: string;
   category: string;
-  optionSets?: Partial<Array<OptionSet>> | undefined;
+  optionSets?: Array<OptionSet>;
   baseCost: number;
   basePrice: number;
   stock: number;

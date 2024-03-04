@@ -161,7 +161,7 @@ function InputProductModal({
           <form onSubmit={formik.handleSubmit}>
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody >
               <Stack
                 divider={<Divider orientation="vertical" />}
                 spacing="0"
@@ -188,9 +188,7 @@ function InputProductModal({
                   ))}
                 </Stepper>
                 <Flex
-                  flexDir="row"
-                  align="center"
-                  justify="center"
+                  flexDir="column" 
                   minH="300px"
                 >
                   {activeStep === 1 && (
