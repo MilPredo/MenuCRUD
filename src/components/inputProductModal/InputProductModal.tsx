@@ -51,21 +51,53 @@ function InputProductModal({
   const [image, setImage] = useState<string | null>(productData?.image ?? "");
   const [imageName, setImageName] = useState<string | undefined>();
   const [formProductData, setFormProductData] = useState<FormikProductData>(
-    productData ?? {
-      name: "",
-      image: "",
-      imageAlt: "",
-      category: "",
-      baseCost: "",
-      basePrice: "",
-      stock: "",
-    }
+    JSON.parse(
+      JSON.stringify(
+        productData ?? {
+          name: "",
+          image: "",
+          imageAlt: "",
+          category: "",
+          baseCost: "",
+          basePrice: "",
+          stock: "",
+        }
+      )
+    )
   );
-
-  setFormProductData; //haaaaaax
   function handleClose() {
     formik.resetForm();
     setActiveStep(1);
+    setFormProductData(
+      JSON.parse(
+        JSON.stringify(
+          productData ?? {
+            name: "",
+            image: "",
+            imageAlt: "",
+            category: "",
+            baseCost: "",
+            basePrice: "",
+            stock: "",
+          }
+        )
+      )
+    );
+    formik.setValues(
+      JSON.parse(
+        JSON.stringify(
+          productData ?? {
+            name: "",
+            image: "",
+            imageAlt: "",
+            category: "",
+            baseCost: "",
+            basePrice: "",
+            stock: "",
+          }
+        )
+      )
+    );
     setImage(productData?.image ?? "");
     setImageName(undefined);
     onClose();
@@ -88,9 +120,7 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required(
-              "Option Item Name is required"
-            ),
+            optionItemName: Yup.string().required("Option Item Name is required"),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -125,41 +155,26 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (
-        errors.baseCost ||
-        errors.basePrice ||
-        errors.category ||
-        errors.name ||
-        errors.stock
-      )
-        setActiveStep(2);
+      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
     <>
       {button ? button(onOpen) : undefined}
 
-      <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
+      <Modal isCentered size="2xl" isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
           <form onSubmit={formik.handleSubmit}>
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack
-                divider={<Divider orientation="vertical" />}
-                spacing="0"
-                gap={4}
-              >
+              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus
-                          complete={<StepIcon />}
-                          incomplete={<StepNumber />}
-                          active={<StepNumber />}
-                        />
+                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -210,12 +225,7 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button
-                  isDisabled={activeStep !== 3}
-                  type="submit"
-                  colorScheme="green"
-                  isLoading={formik.isSubmitting}
-                >
+                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
                   Save
                 </Button>
               </ButtonGroup>
