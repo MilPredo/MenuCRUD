@@ -4,6 +4,7 @@ import {
   getDownloadURL,
   ref as storageRef,
   uploadBytes,
+  deleteObject,
 } from "firebase/storage";
 import {
   getDatabase,
@@ -13,7 +14,10 @@ import {
   remove,
 } from "firebase/database";
 import { ProductData } from "../types";
-import { generateRandomString } from "../helperFunctions";
+import {
+  extractFilenameAndPath,
+  generateRandomString,
+} from "../helperFunctions";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -50,15 +54,32 @@ export const addProductToDatabase = async (
       image: newImage ?? product.image,
     });
   } else {
-    return push(databaseRef(storage, "products"), {
+    return push(databaseRef(database, "products"), {
       ...product,
       image: newImage ?? product.image,
     });
   }
 };
 
-export function deleteProduct(id?: string) {
-  if (!id) return;
+export function deleteImage(imageURL?: string) {
+  if (!imageURL) return;
+  const path = extractFilenameAndPath(imageURL);
+  const imageRef = storageRef(storage, path);
+  let status = false;
+  deleteObject(imageRef)
+    .then(() => {
+      console.log("Product image deleted successfully");
+      status = true;
+    })
+    .catch((error) => {
+      console.error("Error deleting product image:", error);
+      status = false;
+    });
+  return status;
+}
+
+export function deleteProduct(id: string) {
+
   const productRef = databaseRef(database, "products/" + id);
   let status = false;
   remove(productRef)

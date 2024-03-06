@@ -10,15 +10,19 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import { deleteProduct } from "../api/firebase";
+import { deleteImage, deleteProduct } from "../api/firebase";
 
 function DeleteProductButton({
   productData,
   rightIcon,
   leftIcon,
 }: ProductCardProps & {
-  rightIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
-  leftIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
+  rightIcon?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | undefined;
+  leftIcon?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | undefined;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
@@ -50,7 +54,8 @@ function DeleteProductButton({
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              You are about to delete "{productData.name}". This action is irreversible!
+              You are about to delete "{productData.name}". This action is
+              irreversible!
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -61,9 +66,16 @@ function DeleteProductButton({
               >
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={()=>{
-                deleteProduct(productData.id)
-                onClose()}} ml={3}>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  if (!productData.id) return;
+                  if (deleteImage(productData.image))
+                    deleteProduct(productData.id ?? "");
+                  onClose();
+                }}
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>

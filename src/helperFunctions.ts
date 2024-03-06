@@ -78,3 +78,7 @@ export function generateRandomString(length: number) {
 
   return result;
 }
+
+export function extractFilenameAndPath(url: string) {
+  return url.split("?")[0].split("/").reverse()[0].replace("%2F", "/");
+}

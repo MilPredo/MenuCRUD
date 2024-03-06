@@ -146,18 +146,19 @@ function InputProductModal({
   const formik = useFormik<FormikProductData>({
     initialValues: formProductData,
     validationSchema: validationSchema,
-    onSubmit: (values, { validateForm, setSubmitting }) => {
-      validateForm(values).then((errors) => {
-        console.log(errors);
-        alert(errors);
-      });
+    onSubmit: async (values, { validateForm, setSubmitting }) => {
+      // validateForm(values).then((errors) => {
+      //   // console.log(errors);
+      //   // alert(errors);
+      // });
       
-        console.log("sbmit imag!!!!", imageFile);
-        addProductToDatabase(values as ProductData, imageFile).then((ref) => {
-          ref;
-        });
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
+      addProductToDatabase(values as ProductData, imageFile).then((ref) => {
+        alert("Product has been saved.")
+        handleClose()
+      });
+      // alert(JSON.stringify(values, null, 2));
+
+      setSubmitting(false);
     },
   });
 
