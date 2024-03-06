@@ -42,8 +42,15 @@ function ProductCard({ productData }: ProductCardProps) {
     a.shift();
     return { whole: a, fraction };
   }
-  const formattedCost = useMemo(() => formatCurrency(productData.baseCost), [productData.baseCost]);
-  const formattedPrice = useMemo(() => formatCurrency(productData.basePrice), [productData.basePrice]);
+  const formattedCost = useMemo(
+    () => formatCurrency(productData.baseCost),
+    [productData.baseCost]
+  );
+  const formattedPrice = useMemo(
+    () => formatCurrency(productData.basePrice),
+    [productData.basePrice]
+  );
+
   return (
     <Flex
       ref={ref}
@@ -51,26 +58,37 @@ function ProductCard({ productData }: ProductCardProps) {
       // onMouseLeave={() => setIsHovering(false)}
       // onFocus={() => setIsHovering(true)}
       // onBlur={() => setIsHovering(false)}
-      flexGrow={1}
+      // flexGrow={1}
       flexDir={"column"}
       // maxW="300px"
       w="100%"
+      h="100%"
       // p={2}
       // gap={2}
+      align=""
     >
       <Flex
         mx={4}
         pos={"relative"}
         mb={`6px`}
         transform={
-          isHovering ? `scale(1) rotate(${0}deg)` : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
+          isHovering
+            ? `scale(1) rotate(${0}deg)`
+            : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
         }
         transition="transform 0.3s ease"
         // bg={ImageLoading ? "gray" : undefined}
         borderRadius={16}
         zIndex={1}
       >
-        <Flex pos={"relative"} flexDir="column" aspectRatio={1} minW="100%" bg="gray.100" borderRadius={16}>
+        <Flex
+          pos={"relative"}
+          flexDir="column"
+          aspectRatio={1}
+          minW="100%"
+          bg="gray.100"
+          borderRadius={16}
+        >
           <Center borderRadius={16} pos="absolute" w="100%" h="100%">
             {ImageLoading && <Spinner />}
           </Center>
@@ -150,16 +168,40 @@ function ProductCard({ productData }: ProductCardProps) {
           gap={1}
         >
           <></>
-          <Stack direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
-            <Flex flex={1} flexDir="column" justify="space-between">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" />}
+            spacing="0"
+            gap={1}
+          >
+            <Flex flex={1} flexDir="column" justify="space-between" minH="60px">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize={formattedCost.whole.toString().split("").length > 3 ? "18px" : "24px"}>
+                <Heading
+                  as="span"
+                  fontSize={
+                    formattedCost.whole.toString().split("").length > 3
+                      ? "18px"
+                      : "24px"
+                  }
+                >
                   ₱
                 </Heading>
-                <Heading as="span" size={formattedCost.whole.toString().split("").length > 3 ? "md" : "lg"}>
+                <Heading
+                  as="span"
+                  size={
+                    formattedCost.whole.toString().split("").length > 3
+                      ? "md"
+                      : "lg"
+                  }
+                >
                   {formattedCost.whole}
                 </Heading>
                 <Heading as="span" size="sm">
@@ -171,14 +213,33 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column" justify="space-between">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Price
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading as="span" fontSize={formattedPrice.whole.toString().split("").length > 3 ? "18px" : "24px"}>
+                <Heading
+                  as="span"
+                  fontSize={
+                    formattedPrice.whole.toString().split("").length > 3
+                      ? "18px"
+                      : "24px"
+                  }
+                >
                   ₱
                 </Heading>
-                <Heading as="span" size={formattedPrice.whole.toString().split("").length > 3 ? "md" : "lg"}>
+                <Heading
+                  as="span"
+                  size={
+                    formattedPrice.whole.toString().split("").length > 3
+                      ? "md"
+                      : "lg"
+                  }
+                >
                   {formattedPrice.whole}
                 </Heading>
                 <Heading as="span" size="sm">
@@ -190,9 +251,19 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
           </Stack>
-          <Stack direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" />}
+            spacing="0"
+            gap={1}
+          >
             <Flex flex={1} flexDir="column" justify="center">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Category
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -200,7 +271,12 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column" justify="center">
-              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
+              <Text
+                fontWeight={"600"}
+                textAlign="center"
+                fontSize={"12px"}
+                color="GrayText"
+              >
                 Available Stock
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -208,15 +284,17 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
           </Stack>
-          {productData.optionSets && (
-            <DropDownAccordion size="xs" title={"Options"}>
-              <OptionSection
-                key={productData.name + productData.category}
-                size="sm"
-                optionSets={productData.optionSets}
-              />
-            </DropDownAccordion>
-          )}
+          <DropDownAccordion
+            isDisabled={(productData.optionSets?.length ?? 0) <= 0}
+            size="xs"
+            title={"Options"}
+          >
+            <OptionSection
+              key={productData.name + productData.category}
+              size="sm"
+              optionSets={productData.optionSets}
+            />
+          </DropDownAccordion>
           <ButtonGroup spacing="1">
             <Spacer />
             <InputProductModal
@@ -235,7 +313,10 @@ function ProductCard({ productData }: ProductCardProps) {
                 </Button>
               )}
             />
-            <DeleteProductButton productData={productData} rightIcon={<DeleteIcon />} />
+            <DeleteProductButton
+              productData={productData}
+              rightIcon={<DeleteIcon />}
+            />
           </ButtonGroup>
         </Stack>
       </Flex>

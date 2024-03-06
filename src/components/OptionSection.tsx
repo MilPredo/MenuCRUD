@@ -6,11 +6,11 @@ function OptionSection({
   optionSets,
 }: {
   size?: ResponsiveValue<string> | undefined;
-  optionSets: Partial<Array<OptionSet>>;
+  optionSets: Array<OptionSet> | undefined;
 }) {
   return (
     <Stack key={Math.random()} divider={<Divider />} pb={2} flexDir={"column"}> 
-      {optionSets.map((optionSet, index) => {
+      {optionSets && optionSets.map((optionSet, index) => {
         return (
           <Flex flexDir="column" key={optionSet?.optionSetName ?? "" + index}>
             <Heading size={size} mb={1}>

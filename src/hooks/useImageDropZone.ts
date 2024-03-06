@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 
 const useImageDropZone = (initialImage?: string) => {
-  const [imageFile, setImageFile] = useState<File | undefined>();
   const [image, setImage] = useState<string | null>(initialImage ?? null);
+  const [imageFile, setImageFile] = useState<File | undefined>();
   const [imageName, setImageName] = useState<string>();
   const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
   const [isInValid, setIsInValid] = useState<boolean>(false);
@@ -31,8 +31,9 @@ const useImageDropZone = (initialImage?: string) => {
       e.preventDefault();
       setIsDraggedOver(false);
       const file = e.dataTransfer?.files[0];
-      setImageFile(file);
       if (file && file.type.startsWith("image/")) {
+        console.log("image file", file);
+        setImageFile(file);
         setIsInValid(false);
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -41,7 +42,7 @@ const useImageDropZone = (initialImage?: string) => {
         reader.readAsDataURL(file);
         setImageName(file.name);
       } else {
-        setIsInValid(true)
+        setIsInValid(true);
         alert("Invalid file. Please drop an image file.");
       }
     };
@@ -49,8 +50,9 @@ const useImageDropZone = (initialImage?: string) => {
     const handleChange = (e: Event) => {
       e.preventDefault();
       const file = (e.target as HTMLInputElement).files?.[0];
-      setImageFile(file);
       if (file && file.type.startsWith("image/")) {
+        console.log("image file", file);
+        setImageFile(file);
         setIsInValid(false);
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -74,7 +76,10 @@ const useImageDropZone = (initialImage?: string) => {
     }
 
     if (imageInput) {
-      imageInput.addEventListener("change", handleChange);
+      imageInput.addEventListener("change", (e)=>{
+        console.log("before handleChange", imageFile)
+        handleChange(e)
+      });
     }
 
     return () => {

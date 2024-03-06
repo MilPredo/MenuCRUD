@@ -1,15 +1,25 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Divider, Flex, Heading, ResponsiveValue, Stack, useOutsideClick } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  ResponsiveValue,
+  Stack,
+  useOutsideClick,
+} from "@chakra-ui/react";
 import { ReactNode, useRef, useState } from "react";
 
 const DropDownAccordion = ({
   title,
   children,
   size,
+  isDisabled,
 }: {
   size: ResponsiveValue<string> | undefined;
   title: string;
   children: ReactNode;
+  isDisabled: boolean;
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -36,13 +46,19 @@ const DropDownAccordion = ({
         flexDir={"row"}
         justify={"space-between"}
         borderRadius="md"
-        _hover={{ boxShadow:"0px 0px 0px 2px rgba(49, 130, 206, 2) inset", transform: "scale(1.05)"}}
+        _hover={!isDisabled?{
+          boxShadow: "0px 0px 0px 2px rgba(49, 130, 206, 2) inset",
+          transform: "scale(1.05)",
+        }:undefined}
         transition="all 0.3s ease"
         align={"center"}
         as="button"
         onClick={toggleAccordion}
         borderWidth="1px"
         borderColor="#E2E8F0"
+        bgColor={isDisabled?"gray.100":undefined}
+        disabled={isDisabled}
+        cursor={isDisabled?"not-allowed":undefined}
       >
         <Stack
           direction="row"
@@ -54,7 +70,7 @@ const DropDownAccordion = ({
           p={2}
           gap={2}
         >
-          <Heading size={size}>{title}</Heading>
+          <Heading size={size}>{isDisabled?undefined:title}</Heading>
           <ChevronDownIcon
             fontSize={"2xl"}
             transition="transform 0.3s ease"

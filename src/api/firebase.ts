@@ -1,7 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
-import { getDatabase, ref as databaseRef, push, set } from "firebase/database";
+import {
+  getStorage,
+  getDownloadURL,
+  ref as storageRef,
+  uploadBytes,
+} from "firebase/storage";
+import {
+  getDatabase,
+  ref as databaseRef,
+  push,
+  set,
+  remove,
+} from "firebase/database";
 import { ProductData } from "../types";
+import { generateRandomString } from "../helperFunctions";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -18,14 +30,48 @@ console.log(app.name);
 export let storage = getStorage(app);
 export let database = getDatabase(app);
 
-export const addProductToDatabase = async (product: ProductData) => {
+export const addProductToDatabase = async (
+  product: ProductData,
+  imageFile?: File
+) => {
+  let newImage: string | null = null;
+  console.log("Uploading Image: ", imageFile);
+  if (imageFile) {
+    const imageRef = storageRef(
+      storage,
+      "images/" + generateRandomString(50) + imageFile.name
+    );
+    const result = await uploadBytes(imageRef, imageFile);
+    newImage = await getDownloadURL(result.ref);
+  }
   if (product.id) {
-    const newData: Partial<ProductData> = product;
-    return set(databaseRef(database, `products/${product.id}`), newData);
+    return set(databaseRef(database, `products/${product.id}`), {
+      ...product,
+      image: newImage ?? product.image,
+    });
   } else {
-    return push(databaseRef(database, "products"), product);
+    return push(databaseRef(storage, "products"), {
+      ...product,
+      image: newImage ?? product.image,
+    });
   }
 };
+
+export function deleteProduct(id?: string) {
+  if (!id) return;
+  const productRef = databaseRef(database, "products/" + id);
+  let status = false;
+  remove(productRef)
+    .then(() => {
+      console.log("Product deleted successfully");
+      status = true;
+    })
+    .catch((error) => {
+      console.error("Error deleting product:", error);
+      status = false;
+    });
+  return status;
+}
 
 // export const addData = async (data: { [key: string]: any }, path: string) => {
 //   return push(databaseRef(database, path), data);

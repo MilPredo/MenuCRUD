@@ -10,6 +10,7 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+import { deleteProduct } from "../api/firebase";
 
 function DeleteProductButton({
   productData,
@@ -60,7 +61,9 @@ function DeleteProductButton({
               >
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
+              <Button colorScheme="red" onClick={()=>{
+                deleteProduct(productData.id)
+                onClose()}} ml={3}>
                 Delete
               </Button>
             </AlertDialogFooter>

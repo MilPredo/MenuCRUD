@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormikProductData, ProductData } from "../../types";
 import {
   Box,
@@ -52,6 +52,7 @@ function InputProductModal({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [image, setImage] = useState<string | null>(productData?.image ?? "");
   const [imageName, setImageName] = useState<string | undefined>();
+  const [imageFile, setImageFile] = useState<File | undefined>();
   const [formProductData, setFormProductData] = useState<FormikProductData>(
     JSON.parse(
       JSON.stringify(
@@ -122,7 +123,9 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required("Option Item Name is required"),
+            optionItemName: Yup.string().required(
+              "Option Item Name is required"
+            ),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -135,22 +138,26 @@ function InputProductModal({
       })
     ),
   });
+
+  useEffect(() => {
+    console.log("IMIAGEEA!!", imageFile);
+  }, [imageFile]);
+
   const formik = useFormik<FormikProductData>({
     initialValues: formProductData,
     validationSchema: validationSchema,
     onSubmit: (values, { validateForm, setSubmitting }) => {
-      alert("ahahhah");
       validateForm(values).then((errors) => {
         console.log(errors);
         alert(errors);
       });
-      // alert("Hallo");
-      setTimeout(() => {
-        // productDataConvertArraysToKV(values as ProductData)
-        addProductToDatabase(values as ProductData);
+      
+        console.log("sbmit imag!!!!", imageFile);
+        addProductToDatabase(values as ProductData, imageFile).then((ref) => {
+          ref;
+        });
         alert(JSON.stringify(values, null, 2));
         setSubmitting(false);
-      }, 400);
     },
   });
 
@@ -159,7 +166,14 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
+      if (
+        errors.baseCost ||
+        errors.basePrice ||
+        errors.category ||
+        errors.name ||
+        errors.stock
+      )
+        setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
@@ -170,7 +184,9 @@ function InputProductModal({
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
           <form
-            onKeyDown={(event) => event.key === "Enter" && event.preventDefault()}
+            onKeyDown={(event) =>
+              event.key === "Enter" && event.preventDefault()
+            }
             onSubmit={(e) => {
               formik.handleSubmit(e);
             }}
@@ -178,12 +194,20 @@ function InputProductModal({
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
+              <Stack
+                divider={<Divider orientation="vertical" />}
+                spacing="0"
+                gap={4}
+              >
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -200,7 +224,9 @@ function InputProductModal({
                     <InputImage
                       newImage={image}
                       newImageName={imageName}
+                      newImageFile={imageFile}
                       setImage={setImage}
+                      setImageFile={setImageFile}
                       setImageName={setImageName}
                       formik={formik}
                     />
@@ -234,7 +260,12 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
+                <Button
+                  isDisabled={activeStep !== 3}
+                  type="submit"
+                  colorScheme="green"
+                  isLoading={formik.isSubmitting}
+                >
                   Save
                 </Button>
               </ButtonGroup>
