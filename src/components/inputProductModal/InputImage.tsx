@@ -19,14 +19,9 @@ function InputImage({
   setImage: React.Dispatch<React.SetStateAction<string | null>>;
   setImageName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  const {
-    dropZoneRef,
-    imageInputRef,
-    image,
-    imageName,
-    isDraggedOver,
-    isInValid,
-  } = useFileDropZone(newImage ?? formik.values.image);
+  const { dropZoneRef, imageInputRef, image, imageName, isDraggedOver, isInValid } = useFileDropZone(
+    newImage ?? formik.values.image
+  );
   const { ref, isHovering } = useHover();
   const combinedRef = useRef<HTMLDivElement>(null);
 
@@ -52,21 +47,13 @@ function InputImage({
         boxSize="300px"
         borderRadius="lg"
         borderWidth={"4px"}
-        borderColor={
-          isInValid ? "#E53E3E" : isDraggedOver ? "#3182ce" : "GrayText"
-        }
+        borderColor={isInValid ? "#E53E3E" : isDraggedOver ? "#3182ce" : "GrayText"}
         transform={`scale(${isDraggedOver || isHovering ? 1.05 : 1})`}
         transition="transform 0.3s ease"
         type="button"
       >
         <Center>
-          <Square
-            size="50%"
-            flexDir="column"
-            bg="rgba(255,255,255,0.6)"
-            backdropFilter={"blur(4px)"}
-            borderRadius="lg"
-          >
+          <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
             </Text>

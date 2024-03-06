@@ -1,24 +1,20 @@
 import { useState, useEffect } from "react";
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  remove,
+import { 
+  ref, 
   onValue,
   query,
-  orderByChild,
-  equalTo,
+  orderByChild, 
+  startAt,
+  endAt,
 } from "firebase/database";
-import { app } from "./firebase"; // Assuming you have initialized the Firebase app
+//import { app } from "./firebase"; // Assuming you have initialized the Firebase app
 import { KeyValuePair, ProductData, ProductDataFirebase } from "../types";
-import { database, storage } from "../api/firebase";
+import { database } from "../api/firebase";
+import useDebounce from "./useDebounce";
 
 // Custom hook to get the KV list of all products (real-time)
 export const useGetProductListKV = () => {
-  const [products, setProducts] = useState<KeyValuePair<ProductDataFirebase>>(
-    {}
-  );
+  const [products, setProducts] = useState<KeyValuePair<ProductDataFirebase>>({});
 
   useEffect(() => {
     const productsRef = ref(database, "products");
@@ -42,18 +38,24 @@ export const useGetProductListKV = () => {
 
 export const useGetProductList = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
     const productsRef = ref(database, "products");
-    const unsubscribe = onValue(productsRef, (snapshot) => {
+    const queryRef = query(
+      productsRef,
+      orderByChild("name"),
+      startAt(debouncedSearch),
+      endAt(debouncedSearch + "\uf8ff")
+    );
+    const unsubscribe = onValue(searchQuery === "" ? productsRef : queryRef, (snapshot) => {
       const productsData = snapshot.val();
       if (productsData) {
-        const productsArray: ProductData[] = Object.entries(productsData).map(
-          ([id, data]) => ({
-            id, // Add the Firebase-generated ID to each ProductData object
-            ...(data as ProductData),
-          })
-        );
+        const productsArray: ProductData[] = Object.entries(productsData).map(([id, data]) => ({
+          id, // Add the Firebase-generated ID to each ProductData object
+          ...(data as ProductData),
+        }));
         setProducts(productsArray);
       } else {
         setProducts([]);
@@ -63,10 +65,43 @@ export const useGetProductList = () => {
     return () => {
       unsubscribe(); // Detach the listener when the component unmounts
     };
-  }, []);
-  console.log(products)
-  return products;
+  }, [debouncedSearch]);
+  console.log(products);
+  return { products, setSearchQuery };
 };
+
+// export const useGetProductList = () => {
+//   const [products, setProducts] = useState<ProductData[]>([]);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const debouncedSearchQuery = useDebounce(searchQuery, 3000);
+//   useEffect(() => {
+//     const productsRef = ref(database, "products");
+//     let productsQuery: Query | null = null;
+
+//     if (debouncedSearchQuery && debouncedSearchQuery.trim() !== "") {
+//       productsQuery = query(productsRef, orderByChild("name"), equalTo(debouncedSearchQuery.trim()));
+//     }
+
+//     const unsubscribe = onValue(productsQuery || productsRef, (snapshot) => {
+//       const productsData = snapshot.val();
+//       if (productsData) {
+//         const productsArray: ProductData[] = Object.entries(productsData).map(([id, data]) => ({
+//           id,
+//           ...(data as ProductData),
+//         }));
+//         setProducts(productsArray);
+//       } else {
+//         setProducts([]);
+//       }
+//     });
+
+//     return () => {
+//       unsubscribe();
+//     };
+//   }, [debouncedSearchQuery]);
+
+//   return { products, setSearchQuery };
+// };
 
 // // Custom hook to search for products by name (partial search)
 // export const useSearchProduct = (

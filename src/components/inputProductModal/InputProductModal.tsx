@@ -31,7 +31,6 @@ import { useFormik } from "formik";
 import InputImage from "./InputImage";
 import InputProductDetails from "./InputProductDetails";
 import InputOptionSets from "./InputOptionSets";
-import { productDataConvertArraysToKV } from "../../helperFunctions";
 import { addProductToDatabase } from "../../api/firebase";
 // import { addData } from "../../api/firebase";
 
@@ -112,8 +111,8 @@ function InputProductModal({
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     category: Yup.string().required("Category is required"),
-    baseCost: Yup.number().required("Base Cost is required"),
-    basePrice: Yup.number().required("Base Price is required"),
+    baseCost: Yup.number().required("Cost is required"),
+    basePrice: Yup.number().required("Price is required"),
     stock: Yup.number().required("Stock is required"),
     // Validation for optional fields
     image: Yup.string(),
@@ -123,9 +122,7 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required(
-              "Option Item Name is required"
-            ),
+            optionItemName: Yup.string().required("Option Item Name is required"),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -162,14 +159,7 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (
-        errors.baseCost ||
-        errors.basePrice ||
-        errors.category ||
-        errors.name ||
-        errors.stock
-      )
-        setActiveStep(2);
+      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
@@ -180,28 +170,20 @@ function InputProductModal({
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
           <form
+            onKeyDown={(event) => event.key === "Enter" && event.preventDefault()}
             onSubmit={(e) => {
-              e.preventDefault();
               formik.handleSubmit(e);
             }}
           >
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack
-                divider={<Divider orientation="vertical" />}
-                spacing="0"
-                gap={4}
-              >
+              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus
-                          complete={<StepIcon />}
-                          incomplete={<StepNumber />}
-                          active={<StepNumber />}
-                        />
+                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -252,12 +234,7 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button
-                  isDisabled={activeStep !== 3}
-                  type="submit"
-                  colorScheme="green"
-                  isLoading={formik.isSubmitting}
-                >
+                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
                   Save
                 </Button>
               </ButtonGroup>

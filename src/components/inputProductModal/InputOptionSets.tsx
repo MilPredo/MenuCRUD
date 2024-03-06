@@ -27,43 +27,34 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-function InputOptionSets({
-  formik,
-}: {
-  formik: FormikProps<FormikProductData>;
-}) {
-  const [tempOptionSets, setTempOptionSets] = useState<Array<OptionSet>>([
-    ...(formik.values.optionSets ?? []),
-  ]);
+function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> }) {
+  const [tempOptionSets, setTempOptionSets] = useState<Array<OptionSet>>([...(formik.values.optionSets ?? [])]);
   const [addOptionSetInput, setAddOptionSetInput] = useState("");
   const addOptionSet = (optionSetName: string) => {
-    setTempOptionSets((prevOptionSets) => [
-      ...prevOptionSets,
-      { optionSetName, options: [] },
-    ]);
+    for (const val of tempOptionSets) {
+      if (val.optionSetName === optionSetName) {
+        alert("Option-set name already exists.");
+        return;
+      }
+    }
+    setTempOptionSets([...tempOptionSets, { optionSetName, options: [] }]);
   };
 
   const addOption = (optionSetIndex: number, option: Option) => {
-    // if (tempOptionSets[optionSetIndex].options.some(option => option.optionItemName === option.optionItemName)) return alert("Option name already exists.")
     for (const val of tempOptionSets[optionSetIndex].options) {
       if (val.optionItemName === option.optionItemName) {
         alert("Option name already exists.");
-        return; // Exit the function if the condition is met
+        return;
       }
     }
     const updatedOptionSets = [...tempOptionSets];
-    const costModifier =
-      typeof option.costModifier === "string" ? 0 : option.costModifier;
-    const priceModifier =
-      typeof option.priceModifier === "string" ? 0 : option.priceModifier;
+    const costModifier = typeof option.costModifier === "string" ? 0 : option.costModifier;
+    const priceModifier = typeof option.priceModifier === "string" ? 0 : option.priceModifier;
     updatedOptionSets[optionSetIndex] = {
       ...updatedOptionSets[optionSetIndex],
-      options: [
-        ...updatedOptionSets[optionSetIndex].options,
-        { ...option, costModifier, priceModifier },
-      ],
+      options: [...updatedOptionSets[optionSetIndex].options, { ...option, costModifier, priceModifier }],
     };
     setTempOptionSets(updatedOptionSets);
   };
@@ -86,47 +77,44 @@ function InputOptionSets({
 
   function AddOptionInput({ optionSetIndex }: { optionSetIndex: number }) {
     const [addOptionInput, setAddOptionInput] = useState("");
-    const [addOptionCostInput, setAddOptionCostInput] = useState<number | "">(
-      0
-    );
-    const [addOptionPriceInput, setAddOptionPriceInput] = useState<number | "">(
-      0
-    );
+    const [addOptionCostInput, setAddOptionCostInput] = useState<number | "">(0);
+    const [addOptionPriceInput, setAddOptionPriceInput] = useState<number | "">(0);
+    const optionInputRef = useRef<HTMLInputElement>(null);
+
     return (
-      <Stack
-        flexDir="column"
-        spacing={2}
-        p={2}
-        gap={2}
-        borderWidth="1px"
-        borderRadius="md"
-      >
+      <Stack flexDir="column" spacing={2} p={2} gap={2} borderWidth="1px" borderRadius="md">
         <Flex gap={2} align="center">
           <FormControl>
             <FormLabel>Option name</FormLabel>
             <Flex align="center" gap={2}>
               <Input
+                name={"option-name-input-" + tempOptionSets[optionSetIndex].optionSetName}
                 placeholder="Option name"
+                ref={optionInputRef}
+                onKeyDown={(e) => {
+                  if (!(e.key === "Enter")) return;
+                  if (addOptionInput.length < 1) return console.log("Please enter at least one character.");
+                  addOption(optionSetIndex, {
+                    optionItemName: addOptionInput,
+                    costModifier: typeof addOptionCostInput === "string" ? 0 : addOptionCostInput,
+                    priceModifier: typeof addOptionPriceInput === "string" ? 0 : addOptionPriceInput,
+                  });
+                  setAddOptionInput("");
+                }}
                 value={addOptionInput}
                 onChange={(e) => {
+                  e.preventDefault();
                   setAddOptionInput(e.target.value);
                 }}
               />
               <IconButton
                 colorScheme="green"
                 onClick={() => {
-                  if (addOptionInput.length < 1)
-                    return console.log("Please enter at least one character.");
+                  if (addOptionInput.length < 1) return console.log("Please enter at least one character.");
                   addOption(optionSetIndex, {
                     optionItemName: addOptionInput,
-                    costModifier:
-                      typeof addOptionCostInput === "string"
-                        ? 0
-                        : addOptionCostInput,
-                    priceModifier:
-                      typeof addOptionPriceInput === "string"
-                        ? 0
-                        : addOptionPriceInput,
+                    costModifier: typeof addOptionCostInput === "string" ? 0 : addOptionCostInput,
+                    priceModifier: typeof addOptionPriceInput === "string" ? 0 : addOptionPriceInput,
                   });
                   setAddOptionInput("");
                 }}
@@ -143,9 +131,7 @@ function InputOptionSets({
               <InputLeftAddon>₱</InputLeftAddon>
               <NumberInput
                 value={addOptionCostInput}
-                name={
-                  tempOptionSets[optionSetIndex].optionSetName + "-option-input"
-                }
+                name={tempOptionSets[optionSetIndex].optionSetName + "-option-input"}
                 onChange={(_, val) => {
                   setAddOptionCostInput(isNaN(val) ? "" : val);
                 }}
@@ -163,13 +149,6 @@ function InputOptionSets({
             </InputGroup>
           </FormControl>
 
-          {/* <Input
-              placeholder="Cost Modifier"
-              value={addOptionInput}
-              onChange={(e) => {
-                setAddOptionCostInput(e.target.valueAsNumber);
-              }}
-            /> */}
           <FormControl>
             <FormLabel>Price Modifier</FormLabel>
             <InputGroup>
@@ -199,15 +178,7 @@ function InputOptionSets({
   }
 
   return (
-    <Stack
-      flexDir="column"
-      divider={<Divider />}
-      overflowY="auto"
-      overflowX="hidden"
-      maxH="60vh"
-      p={4}
-      gap={2}
-    >
+    <Stack flexDir="column" divider={<Divider />} overflowY="auto" overflowX="hidden" maxH="60vh" p={4} gap={2}>
       <FormControl>
         <FormLabel>Option-set name</FormLabel>
         <Flex gap={2} align="center">
@@ -215,6 +186,11 @@ function InputOptionSets({
             name="option-set-input"
             placeholder="Option-set name"
             value={addOptionSetInput}
+            onKeyDown={(e) => {
+              if (!(e.key === "Enter")) return;
+              addOptionSet(addOptionSetInput);
+              setAddOptionSetInput("");
+            }}
             onChange={(e) => {
               setAddOptionSetInput(e.target.value);
             }}
@@ -222,8 +198,7 @@ function InputOptionSets({
           <IconButton
             colorScheme="green"
             onClick={() => {
-              if (!addOptionSetInput)
-                return alert("Please enter at least one character.");
+              if (!addOptionSetInput) return alert("Please enter at least one character.");
               addOptionSet(addOptionSetInput);
               setAddOptionSetInput("");
             }}
@@ -235,16 +210,7 @@ function InputOptionSets({
 
       <VStack flexDir="column-reverse" overflow={"visible"} gap={8}>
         {tempOptionSets.map((optionSet, index) => (
-          <Flex
-            flexDir="column"
-            w="100%"
-            key={index}
-            p={2}
-            borderWidth="1px"
-            borderRadius="md"
-            boxShadow="md"
-            gap={2}
-          >
+          <Flex flexDir="column" w="100%" key={index} p={2} borderWidth="1px" borderRadius="md" boxShadow="md" gap={2}>
             <Flex align="center" gap={2} m={2} p={2}>
               <IconButton
                 size="sm"
@@ -260,12 +226,7 @@ function InputOptionSets({
               </Heading>
             </Flex>
             <AddOptionInput optionSetIndex={index} />
-            <Flex
-              borderWidth="1px"
-              borderRadius="md"
-              display={optionSet.options.length === 0 ? "none" : "block"}
-              p={2}
-            >
+            <Flex borderWidth="1px" borderRadius="md" display={optionSet.options.length === 0 ? "none" : "block"} p={2}>
               <TableContainer>
                 <Table size="sm">
                   <Thead>
@@ -326,65 +287,9 @@ function InputOptionSets({
             </Flex>
           </Flex>
         ))}
-        {/* <FormControl
-          isInvalid={
-            typeof formik.errors.name === "string" && formik.touched.name
-          }
-        >
-          <FormLabel>Product Name</FormLabel>
-          <Input
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-            type="text"
-            name="name"
-            placeholder="Name"
-            autoFocus
-          />
-          <Button>asd</Button>
-          <FormErrorMessage fontFamily="sans-serif">
-            {formik.errors.name}
-          </FormErrorMessage>
-        </FormControl> */}
       </VStack>
     </Stack>
   );
-  // return (
-  //   <Flex>
-  //     <Button onClick={() => {}}>New Set</Button>
-  //     {formik.values.optionSets &&
-  //       formik.values.optionSets.map((optionSet, index) => {
-  //         return (
-  //           <Flex flexDir="column" key={index} w="150px" h="150px">
-  //             <Heading size="md">{optionSet && optionSet.optionSetName}</Heading>
-  //             <Button>New Option</Button>
-  //             {optionSet &&
-  //               optionSet.options.map((option, index2) => {
-  //                 return (
-  //                   <Flex key={index2}>
-  //                     <Text>{option.optionItemName}</Text>
-  //                     <FormControl isInvalid={typeof (formik.errors.optionSets as unknown as (OptionSet | undefined)[])[index]?.options === "string" && formik.touched.name}>
-  //                       <Input
-  //                         onChange={formik.handleChange}
-  //                         onBlur={formik.handleBlur}
-  //                         value={formik.values.name}
-  //                         type="text"
-  //                         name="optionName"
-  //                         placeholder="Option name"
-  //                         autoFocus
-  //                       />
-  //                       <FormErrorMessage fontFamily="sans-serif">{formik.errors.name}</FormErrorMessage>
-  //                     </FormControl>
-  //                     <Text>Cost +{option.costModifier}</Text>
-  //                     <Text>Price +{option.priceModifier}</Text>
-  //                   </Flex>
-  //                 );
-  //               })}
-  //           </Flex>
-  //         );
-  //       })}
-  //   </Flex>
-  // );
 }
 
 export default InputOptionSets;

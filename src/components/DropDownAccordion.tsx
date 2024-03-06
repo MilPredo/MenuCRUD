@@ -76,7 +76,7 @@ const DropDownAccordion = ({
           borderRadius={16}
           borderWidth={2}
           bg={"white"}
-          
+          w="100%"
         >
           <Box p={2}>{children}</Box>
         </Box>

@@ -1,18 +1,12 @@
 import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
-import {
-  Center,
-  Input,
-  InputGroup,
-  InputLeftElement,
-} from "@chakra-ui/react";
+import { Center, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 
 interface SearchBarProps {
   onChange: (val: string) => void;
   onCancel: () => void;
-  onEnter: (val: string) => void;
 }
-function SearchBar({ onChange, onCancel, onEnter }: SearchBarProps) {
+function SearchBar({ onChange, onCancel }: SearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -43,13 +37,8 @@ function SearchBar({ onChange, onCancel, onEnter }: SearchBarProps) {
         placeholder="Search"
         value={searchQuery}
         onChange={(e) => {
-          setSearchQuery(e.target.value);
+          setSearchQuery(e.target.value); 
           onChange(e.target.value);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            onEnter(searchQuery);
-          }
         }}
       />
     </InputGroup>

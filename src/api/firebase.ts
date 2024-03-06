@@ -18,19 +18,11 @@ console.log(app.name);
 export let storage = getStorage(app);
 export let database = getDatabase(app);
 
-
-
 export const addProductToDatabase = async (product: ProductData) => {
   if (product.id) {
-    // If id is provided, it's an update operation
-    const updates: Partial<ProductData> = {
-      // Partial update with only the provided fields
-      name: product.name,
-      // Update other fields as needed
-    };
-    return set(databaseRef(database, `products/${product.id}`), updates);
+    const newData: Partial<ProductData> = product;
+    return set(databaseRef(database, `products/${product.id}`), newData);
   } else {
-    // If id is not provided, it's an add operation
     return push(databaseRef(database, "products"), product);
   }
 };

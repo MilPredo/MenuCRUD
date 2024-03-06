@@ -6,23 +6,23 @@ export type Option = {
   optionItemName: string;
   costModifier: number;
   priceModifier: number;
-  minQuantity?: number;
-  maxQuantity?: number;
-  defaultOption?: boolean;
+  // minQuantity?: number;
+  // maxQuantity?: number;
+  // defaultOption?: boolean;
 };
 
 export type OptionSet = {
   optionSetName: string;
-  minOptions?: number;
-  maxOptions?: number;
+  // minOptions?: number;
+  // maxOptions?: number;
   options: Array<Option>;
   // options: KeyValuePair<Option>;
 };
 
 export type OptionSetFirebase = {
   optionSetName: string;
-  minOptions?: number;
-  maxOptions?: number;
+  // minOptions?: number;
+  // maxOptions?: number;
   // options: Array[Option];
   options: KeyValuePair<Option>;
 };
@@ -30,7 +30,7 @@ export type OptionSetFirebase = {
 export type ProductDataFirebase = {
   name: string;
   image?: string;
-  imageAlt?: string;
+  // imageAlt?: string;
   category: string;
   optionSets?: KeyValuePair<OptionSetFirebase>;
   baseCost: number;
@@ -41,8 +41,7 @@ export type ProductDataFirebase = {
 export type ProductData = {
   id?: string; //firebase id
   name: string;
-  image?: string;
-  imageAlt?: string;
+  image?: string; 
   category: string;
   optionSets?: Array<OptionSet>;
   baseCost: number;
