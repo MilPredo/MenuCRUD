@@ -31,6 +31,9 @@ import { useFormik } from "formik";
 import InputImage from "./InputImage";
 import InputProductDetails from "./InputProductDetails";
 import InputOptionSets from "./InputOptionSets";
+import { productDataConvertArraysToKV } from "../../helperFunctions";
+import { addProductToDatabase } from "../../api/firebase";
+// import { addData } from "../../api/firebase";
 
 const steps = [
   { title: "First", description: "Image" },
@@ -120,7 +123,9 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required("Option Item Name is required"),
+            optionItemName: Yup.string().required(
+              "Option Item Name is required"
+            ),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -144,6 +149,8 @@ function InputProductModal({
       });
       // alert("Hallo");
       setTimeout(() => {
+        // productDataConvertArraysToKV(values as ProductData)
+        addProductToDatabase(values as ProductData);
         alert(JSON.stringify(values, null, 2));
         setSubmitting(false);
       }, 400);
@@ -155,7 +162,14 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
+      if (
+        errors.baseCost ||
+        errors.basePrice ||
+        errors.category ||
+        errors.name ||
+        errors.stock
+      )
+        setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
@@ -165,16 +179,29 @@ function InputProductModal({
       <Modal isCentered size="2xl" isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
-          <form onSubmit={formik.handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              formik.handleSubmit(e);
+            }}
+          >
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
+              <Stack
+                divider={<Divider orientation="vertical" />}
+                spacing="0"
+                gap={4}
+              >
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -225,7 +252,12 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
+                <Button
+                  isDisabled={activeStep !== 3}
+                  type="submit"
+                  colorScheme="green"
+                  isLoading={formik.isSubmitting}
+                >
                   Save
                 </Button>
               </ButtonGroup>

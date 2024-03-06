@@ -29,11 +29,20 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> }) {
-  const [tempOptionSets, setTempOptionSets] = useState<Array<OptionSet>>([...(formik.values.optionSets ?? [])]);
+function InputOptionSets({
+  formik,
+}: {
+  formik: FormikProps<FormikProductData>;
+}) {
+  const [tempOptionSets, setTempOptionSets] = useState<Array<OptionSet>>([
+    ...(formik.values.optionSets ?? []),
+  ]);
   const [addOptionSetInput, setAddOptionSetInput] = useState("");
   const addOptionSet = (optionSetName: string) => {
-    setTempOptionSets((prevOptionSets) => [...prevOptionSets, { optionSetName, options: [] }]);
+    setTempOptionSets((prevOptionSets) => [
+      ...prevOptionSets,
+      { optionSetName, options: [] },
+    ]);
   };
 
   const addOption = (optionSetIndex: number, option: Option) => {
@@ -45,11 +54,16 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
       }
     }
     const updatedOptionSets = [...tempOptionSets];
-    const costModifier = typeof option.costModifier === "string" ? 0 : option.costModifier;
-    const priceModifier = typeof option.priceModifier === "string" ? 0 : option.priceModifier;
+    const costModifier =
+      typeof option.costModifier === "string" ? 0 : option.costModifier;
+    const priceModifier =
+      typeof option.priceModifier === "string" ? 0 : option.priceModifier;
     updatedOptionSets[optionSetIndex] = {
       ...updatedOptionSets[optionSetIndex],
-      options: [...updatedOptionSets[optionSetIndex].options, { ...option, costModifier, priceModifier }],
+      options: [
+        ...updatedOptionSets[optionSetIndex].options,
+        { ...option, costModifier, priceModifier },
+      ],
     };
     setTempOptionSets(updatedOptionSets);
   };
@@ -72,10 +86,21 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
 
   function AddOptionInput({ optionSetIndex }: { optionSetIndex: number }) {
     const [addOptionInput, setAddOptionInput] = useState("");
-    const [addOptionCostInput, setAddOptionCostInput] = useState<number | "">(0);
-    const [addOptionPriceInput, setAddOptionPriceInput] = useState<number | "">(0);
+    const [addOptionCostInput, setAddOptionCostInput] = useState<number | "">(
+      0
+    );
+    const [addOptionPriceInput, setAddOptionPriceInput] = useState<number | "">(
+      0
+    );
     return (
-      <Stack flexDir="column" spacing={2} p={2} gap={2} borderWidth="1px" borderRadius="md">
+      <Stack
+        flexDir="column"
+        spacing={2}
+        p={2}
+        gap={2}
+        borderWidth="1px"
+        borderRadius="md"
+      >
         <Flex gap={2} align="center">
           <FormControl>
             <FormLabel>Option name</FormLabel>
@@ -90,11 +115,18 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
               <IconButton
                 colorScheme="green"
                 onClick={() => {
-                  if (addOptionInput.length < 1) return console.log("Please enter at least one character.");
+                  if (addOptionInput.length < 1)
+                    return console.log("Please enter at least one character.");
                   addOption(optionSetIndex, {
                     optionItemName: addOptionInput,
-                    costModifier: typeof addOptionCostInput === "string" ? 0 : addOptionCostInput,
-                    priceModifier: typeof addOptionPriceInput === "string" ? 0 : addOptionPriceInput,
+                    costModifier:
+                      typeof addOptionCostInput === "string"
+                        ? 0
+                        : addOptionCostInput,
+                    priceModifier:
+                      typeof addOptionPriceInput === "string"
+                        ? 0
+                        : addOptionPriceInput,
                   });
                   setAddOptionInput("");
                 }}
@@ -111,6 +143,9 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
               <InputLeftAddon>₱</InputLeftAddon>
               <NumberInput
                 value={addOptionCostInput}
+                name={
+                  tempOptionSets[optionSetIndex].optionSetName + "-option-input"
+                }
                 onChange={(_, val) => {
                   setAddOptionCostInput(isNaN(val) ? "" : val);
                 }}
@@ -164,11 +199,20 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
   }
 
   return (
-    <Stack flexDir="column" divider={<Divider />} overflowY="auto" overflowX="hidden" maxH="60vh" p={4} gap={2}>
+    <Stack
+      flexDir="column"
+      divider={<Divider />}
+      overflowY="auto"
+      overflowX="hidden"
+      maxH="60vh"
+      p={4}
+      gap={2}
+    >
       <FormControl>
         <FormLabel>Option-set name</FormLabel>
         <Flex gap={2} align="center">
           <Input
+            name="option-set-input"
             placeholder="Option-set name"
             value={addOptionSetInput}
             onChange={(e) => {
@@ -178,7 +222,8 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
           <IconButton
             colorScheme="green"
             onClick={() => {
-              if (!addOptionSetInput) return alert("Please enter at least one character.");
+              if (!addOptionSetInput)
+                return alert("Please enter at least one character.");
               addOptionSet(addOptionSetInput);
               setAddOptionSetInput("");
             }}
@@ -190,7 +235,16 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
 
       <VStack flexDir="column-reverse" overflow={"visible"} gap={8}>
         {tempOptionSets.map((optionSet, index) => (
-          <Flex flexDir="column" w="100%" key={index} p={2} borderWidth="1px" borderRadius="md" boxShadow="md" gap={2}>
+          <Flex
+            flexDir="column"
+            w="100%"
+            key={index}
+            p={2}
+            borderWidth="1px"
+            borderRadius="md"
+            boxShadow="md"
+            gap={2}
+          >
             <Flex align="center" gap={2} m={2} p={2}>
               <IconButton
                 size="sm"
@@ -206,7 +260,12 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
               </Heading>
             </Flex>
             <AddOptionInput optionSetIndex={index} />
-            <Flex borderWidth="1px" borderRadius="md" display={optionSet.options.length === 0 ? "none" : "block"} p={2}>
+            <Flex
+              borderWidth="1px"
+              borderRadius="md"
+              display={optionSet.options.length === 0 ? "none" : "block"}
+              p={2}
+            >
               <TableContainer>
                 <Table size="sm">
                   <Thead>

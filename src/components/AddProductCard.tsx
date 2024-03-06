@@ -15,8 +15,8 @@ import useHover from "../hooks/useHover";
 function AddProductCard() {
   const {ref, isHovering} = useHover()
   return (
-    <Flex flexDir="column" align="center" h="100%">
-      <Flex pos="relative" w="100%" flex={1}></Flex>
+    <Flex flexDir="column" align="center" h="100%" w="100%" bg='red'>
+      <Flex bg='green' pos="relative" w="100%" flex={1}></Flex>
       <Flex w="100%" flex={1} align="flex-end">
         <Flex
           justify="center"

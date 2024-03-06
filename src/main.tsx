@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from './App.tsx'
 
@@ -19,7 +19,7 @@ import App from './App.tsx'
 //       <Heading>{text}</Heading>
 //       <Button
 //         onClick={async () => {
-//           const dataRef = addData({ text, boop:"ahah", beep: "dw", bop: "ahash" }, "potato");
+//           const dataRef = addData({ text, boop:"ahah", beep: "dw", bop: ["ahash","asd"] }, "adadad");
 //           alert(JSON.stringify(dataRef));
 //         }}
 //       >

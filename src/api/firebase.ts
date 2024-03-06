@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getDatabase, ref as databaseRef, push, update } from "firebase/database";
+import { getDatabase, ref as databaseRef, push, update, set } from "firebase/database";
 import { ProductData } from "../types";
 
 const firebaseConfig = {
@@ -18,27 +18,23 @@ console.log(app.name);
 export let storage = getStorage(app);
 export let database = getDatabase(app);
 
-export const uploadImage = async (file: File) => {
-  const localStorageRef = storageRef(storage, file.name);
-  await uploadBytes(localStorageRef, file);
-  return getDownloadURL(localStorageRef);
-};
 
-export const addProductToDatabase = async (productData: ProductData, productId?: string) => {
-  if (productId) {
-    // If productId is provided, it's an update operation
+
+export const addProductToDatabase = async (product: ProductData) => {
+  if (product.id) {
+    // If id is provided, it's an update operation
     const updates: Partial<ProductData> = {
       // Partial update with only the provided fields
-      name: productData.name,
+      name: product.name,
       // Update other fields as needed
     };
-    return update(databaseRef(database, `products/${productId}`), updates);
+    return set(databaseRef(database, `products/${product.id}`), updates);
   } else {
-    // If productId is not provided, it's an add operation
-    return push(databaseRef(database, "products"), productData);
+    // If id is not provided, it's an add operation
+    return push(databaseRef(database, "products"), product);
   }
 };
 
-export const addData = async (data: { [key: string]: any }, path: string) => {
-  return push(databaseRef(database, path), data);
-};
+// export const addData = async (data: { [key: string]: any }, path: string) => {
+//   return push(databaseRef(database, path), data);
+// };

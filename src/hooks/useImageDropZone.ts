@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 const useImageDropZone = (initialImage?: string) => {
+  const [imageFile, setImageFile] = useState<File | undefined>();
   const [image, setImage] = useState<string | null>(initialImage ?? null);
   const [imageName, setImageName] = useState<string>();
   const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
@@ -23,13 +24,14 @@ const useImageDropZone = (initialImage?: string) => {
 
     const handleDragLeave = () => {
       setIsDraggedOver(false);
-      setIsInValid(false);
+      // setIsInValid(false);
     };
 
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
       setIsDraggedOver(false);
       const file = e.dataTransfer?.files[0];
+      setImageFile(file);
       if (file && file.type.startsWith("image/")) {
         setIsInValid(false);
         const reader = new FileReader();
@@ -39,14 +41,15 @@ const useImageDropZone = (initialImage?: string) => {
         reader.readAsDataURL(file);
         setImageName(file.name);
       } else {
+        setIsInValid(true)
         alert("Invalid file. Please drop an image file.");
-        setIsInValid(true);
       }
     };
 
     const handleChange = (e: Event) => {
       e.preventDefault();
       const file = (e.target as HTMLInputElement).files?.[0];
+      setImageFile(file);
       if (file && file.type.startsWith("image/")) {
         setIsInValid(false);
         const reader = new FileReader();
@@ -92,6 +95,7 @@ const useImageDropZone = (initialImage?: string) => {
   return {
     dropZoneRef,
     imageInputRef,
+    imageFile,
     image,
     imageName,
     isInValid,
