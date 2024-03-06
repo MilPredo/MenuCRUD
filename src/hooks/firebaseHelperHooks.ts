@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import { 
-  ref, 
-  onValue,
-  query,
-  orderByChild, 
-  startAt,
-  endAt,
-} from "firebase/database";
+import { ref, onValue, query, orderByChild, startAt, endAt } from "firebase/database";
 //import { app } from "./firebase"; // Assuming you have initialized the Firebase app
 import { KeyValuePair, ProductData, ProductDataFirebase } from "../types";
 import { database } from "../api/firebase";
@@ -37,7 +30,7 @@ export const useGetProductListKV = () => {
 };
 
 export const useGetProductList = () => {
-  const [products, setProducts] = useState<ProductData[]>([]);
+  const [products, setProducts] = useState<ProductData[] | KeyValuePair<ProductDataFirebase>>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedSearch = useDebounce(searchQuery, 300);
 

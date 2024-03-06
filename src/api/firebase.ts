@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getDatabase, ref as databaseRef, push, update, set } from "firebase/database";
+import { getStorage } from "firebase/storage";
+import { getDatabase, ref as databaseRef, push, set } from "firebase/database";
 import { ProductData } from "../types";
 
 const firebaseConfig = {

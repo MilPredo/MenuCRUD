@@ -1,5 +1,5 @@
 import { ChakraProvider, Flex, extendTheme, Heading, Grid, GridItem, Button } from "@chakra-ui/react";
-import { OptionSet, OptionSetFirebase, ProductData, ProductDataFirebase } from "./types";
+import { KeyValuePair, ProductDataFirebase } from "./types";
 import ProductCard from "./components/ProductCard";
 // import { motion } from "framer-motion";
 /*
@@ -15,10 +15,8 @@ import "@fontsource-variable/quicksand";
 import "@fontsource-variable/hepta-slab";
 import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
-import AddProductCard from "./components/AddProductCard";
 import { useGetProductList } from "./hooks/firebaseHelperHooks";
-import { keyValuePairsToArray, productDataFirebaseConvertKVToArrays } from "./helperFunctions";
-import { useEffect, useState } from "react";
+import { productDataFirebaseConvertKVToArrays } from "./helperFunctions";
 import { AddIcon } from "@chakra-ui/icons";
 import InputProductModal from "./components/inputProductModal/InputProductModal";
 const customTheme = extendTheme({
@@ -33,8 +31,8 @@ function App() {
   // let productDataFirebase = keyValuePairsToArray<ProductDataFirebase>(
   //   useGetProductList()
   // );
-  const {products, setSearchQuery} = useGetProductList();
-  console.log("APP",products)
+  const { products, setSearchQuery } = useGetProductList();
+  console.log("APP", products);
   // const [productData, setProductData] = useState<ProductData[]>([]);
   // setSearchQuery
   return (
@@ -65,7 +63,12 @@ function App() {
             </Flex>
           </Flex>
           <Flex flex={1}>
-            <SearchBar onChange={setSearchQuery} onCancel={()=>{setSearchQuery("")}} />
+            <SearchBar
+              onChange={setSearchQuery}
+              onCancel={() => {
+                setSearchQuery("");
+              }}
+            />
           </Flex>
           <Flex flex={1} />
         </Flex>
@@ -81,7 +84,7 @@ function App() {
             {/* <GridItem flexDir={"column"}>
               <AddProductCard />
             </GridItem> */}
-            { productDataFirebaseConvertKVToArrays(products).map((data, key) => (
+            {productDataFirebaseConvertKVToArrays(products as KeyValuePair<ProductDataFirebase>).map((data, key) => (
               <GridItem key={data.name + key} flexDir={"column"}>
                 <Flex flexDir="column" align="center" h="100%">
                   <ProductCard productData={data} />
