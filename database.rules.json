@@ -1,5 +1,8 @@
 { 
   "rules": {
+    "product": {
+      ".indexOn": "name"
+    },
     ".read": true,
     ".write": true
   }

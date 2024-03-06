@@ -70,8 +70,8 @@ function DeleteProductButton({
                 colorScheme="red"
                 onClick={() => {
                   if (!productData.id) return;
-                  if (deleteImage(productData.image))
-                    deleteProduct(productData.id ?? "");
+                  deleteImage(productData.image);
+                  deleteProduct(productData.id ?? "");
                   onClose();
                 }}
                 ml={3}

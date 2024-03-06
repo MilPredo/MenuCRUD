@@ -79,7 +79,7 @@ export function deleteImage(imageURL?: string) {
 }
 
 export function deleteProduct(id: string) {
-
+  console.log("deleting id", id)
   const productRef = databaseRef(database, "products/" + id);
   let status = false;
   remove(productRef)

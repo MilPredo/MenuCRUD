@@ -147,14 +147,14 @@ function InputProductModal({
     initialValues: formProductData,
     validationSchema: validationSchema,
     onSubmit: async (values, { validateForm, setSubmitting }) => {
-      // validateForm(values).then((errors) => {
-      //   // console.log(errors);
-      //   // alert(errors);
-      // });
-      
-      addProductToDatabase(values as ProductData, imageFile).then((ref) => {
-        alert("Product has been saved.")
-        handleClose()
+      validateForm(values).then((errors) => {
+        console.log(errors);
+        // alert(errors);
+      });
+      setSubmitting(true);
+      await addProductToDatabase(values as ProductData, imageFile).then(() => {
+        alert("Product has been saved.");
+        handleClose();
       });
       // alert(JSON.stringify(values, null, 2));
 
