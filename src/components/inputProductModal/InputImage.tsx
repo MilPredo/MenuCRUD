@@ -25,14 +25,7 @@ function InputImage({
     newImage ?? formik.values.image
   );
   const { ref, isHovering } = useHover();
-  const combinedRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    //@ts-ignore
-    dropZoneRef.current = combinedRef.current;
-    //@ts-ignore
-    ref.current = combinedRef.current;
-  }, [dropZoneRef, ref]);
   useEffect(() => {
     //formik.values.image = image ?? undefined;
     setImage(image);
@@ -46,7 +39,7 @@ function InputImage({
         backgroundSize="cover"
         backgroundPosition="center"
         as="button"
-        ref={combinedRef}
+        ref={dropZoneRef}
         boxSize="300px"
         borderRadius="lg"
         borderWidth={"4px"}
@@ -55,7 +48,7 @@ function InputImage({
         transition="transform 0.3s ease"
         type="button"
       >
-        <Center>
+        <Center ref={ref}>
           <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
