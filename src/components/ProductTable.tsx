@@ -1,17 +1,4 @@
-import {
-  Button,
-  Flex,
-  IconButton,
-  Image,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Flex, IconButton, Image, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { KeyValuePair, ProductData, ProductDataFirebase } from "../types";
 import { productDataFirebaseConvertKVToArrays } from "../helperFunctions";
