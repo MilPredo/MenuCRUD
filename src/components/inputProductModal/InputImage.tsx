@@ -48,7 +48,7 @@ function InputImage({
         transition="transform 0.3s ease"
         type="button"
       >
-        <Center ref={ref} bg='red' h="100%">
+        <Center ref={ref} h="100%">
           <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
