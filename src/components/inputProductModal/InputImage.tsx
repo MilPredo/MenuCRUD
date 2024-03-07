@@ -3,7 +3,7 @@ import { FormikProps } from "formik";
 import { FormikProductData } from "../../types";
 import useFileDropZone from "../../hooks/useImageDropZone";
 import useHover from "../../hooks/useHover";
-import { useEffect, useRef } from "react";
+import { useEffect} from "react";
 // import useMultiRef from "../../hooks/useMultiRef";
 
 function InputImage({
@@ -48,7 +48,7 @@ function InputImage({
         transition="transform 0.3s ease"
         type="button"
       >
-        <Center ref={ref}>
+        <Center ref={ref} bg='red' h="100%">
           <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
