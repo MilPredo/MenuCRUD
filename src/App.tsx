@@ -1,7 +1,4 @@
-import { ChakraProvider, Flex, extendTheme, Heading, Grid, GridItem, Button } from "@chakra-ui/react";
-import { KeyValuePair, ProductDataFirebase } from "./types";
-import ProductCard from "./components/ProductCard";
-// import { motion } from "framer-motion";
+import { ChakraProvider, Flex, extendTheme, Heading, Button } from "@chakra-ui/react";
 /*
 A Category
 A Name
@@ -11,35 +8,32 @@ A Cost
 Amount in stock
 */
 import "@fontsource-variable/quicksand";
-// Supports weights 100-900
 import "@fontsource-variable/hepta-slab";
 import "@fontsource/concert-one";
 import SearchBar from "./components/SearchBar";
 import { useGetProductList } from "./hooks/firebaseHelperHooks";
-import { productDataFirebaseConvertKVToArrays } from "./helperFunctions";
 import { AddIcon } from "@chakra-ui/icons";
 import InputProductModal from "./components/inputProductModal/InputProductModal";
+import CardList from "./components/CardList";
+import ProductTable from "./components/ProductTable";
+import { useState } from "react";
 const customTheme = extendTheme({
   fonts: {
     body: "''Quicksand', sans-serif'",
     heading: "'Hepta Slab Variable', serif",
-    // Add more font styles as needed
   },
 });
 
 function App() {
-  // let productDataFirebase = keyValuePairsToArray<ProductDataFirebase>(
-  //   useGetProductList()
-  // );
   const { products, setSearchQuery } = useGetProductList();
+  const [viewMode, setViewMode] = useState<"card" | "list">("card");
   console.log("APP", products);
-  // const [productData, setProductData] = useState<ProductData[]>([]);
-  // setSearchQuery
+
   return (
     <ChakraProvider theme={customTheme}>
       <Flex flexDir={"column"} backgroundColor={"#ead9c8"} h={"100vh"} overflow="hidden">
         <Flex align="center" boxShadow="md" bg="white">
-          <Flex flex={1}>
+          <Flex flex={1} gap={2}>
             <Heading
               borderWidth="6px"
               borderRadius="12px"
@@ -51,7 +45,7 @@ function App() {
             >
               THE MENU
             </Heading>
-            <Flex flex={1} justify="center" align="center">
+            <Flex flex={1} justify="center" align="center" gap={2}>
               <InputProductModal
                 title="Add Item"
                 button={(onOpen) => (
@@ -60,6 +54,26 @@ function App() {
                   </Button>
                 )}
               />
+            </Flex>
+            <Flex flex={1} justify="center" align="center" gap={1}>
+              <Button
+                variant={viewMode === "card" ? "solid" : "outline"}
+                onClick={() => {
+                  setViewMode("card");
+                }}
+                colorScheme="blue"
+              >
+                Card View
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "solid" : "outline"}
+                onClick={() => {
+                  setViewMode("list");
+                }}
+                colorScheme="blue"
+              >
+                List View
+              </Button>
             </Flex>
           </Flex>
           <Flex flex={1}>
@@ -73,25 +87,7 @@ function App() {
           <Flex flex={1} />
         </Flex>
         <Flex flexDir={"column"} align="center" h="100%" overflow="auto">
-          <Grid
-            w="1280px"
-            templateColumns="repeat(5, 1fr)"
-            rowGap={2}
-            columnGap={4}
-            p={4}
-            // mt={4}
-          >
-            {/* <GridItem flexDir={"column"}>
-              <AddProductCard />
-            </GridItem> */}
-            {productDataFirebaseConvertKVToArrays(products as KeyValuePair<ProductDataFirebase>).map((data, key) => (
-              <GridItem key={data.name + key} flexDir={"column"}>
-                <Flex flexDir="column" align="center" h="100%">
-                  <ProductCard productData={data} />
-                </Flex>
-              </GridItem>
-            ))}
-          </Grid>
+          {viewMode === "card" ? <CardList products={products} /> : <ProductTable products={products} />}
         </Flex>
       </Flex>
     </ChakraProvider>

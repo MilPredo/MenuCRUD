@@ -41,7 +41,7 @@ export type ProductDataFirebase = {
 export type ProductData = {
   id?: string; //firebase id
   name: string;
-  image?: string; 
+  image?: string;
   category: string;
   optionSets?: Array<OptionSet>;
   baseCost: number;
@@ -55,10 +55,7 @@ export interface ProductCardProps {
   productData: ProductData;
 }
 
-export type FormikProductData = Omit<
-  ProductData,
-  "baseCost" | "basePrice" | "stock"
-> & {
+export type FormikProductData = Omit<ProductData, "baseCost" | "basePrice" | "stock"> & {
   baseCost: string | number;
   basePrice: string | number;
   stock: string | number;

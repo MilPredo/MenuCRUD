@@ -9,7 +9,6 @@ import { useEffect, useRef } from "react";
 function InputImage({
   formik,
   newImage,
-  newImageFile,
   newImageName,
   setImage,
   setImageFile,
@@ -17,21 +16,14 @@ function InputImage({
 }: {
   formik: FormikProps<FormikProductData>;
   newImage?: string | null;
-  newImageFile?: File | undefined;
   newImageName?: string;
   setImage: React.Dispatch<React.SetStateAction<string | null>>;
   setImageFile: React.Dispatch<React.SetStateAction<File | undefined>>;
   setImageName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  const {
-    dropZoneRef,
-    imageInputRef,
-    image,
-    imageName,
-    isDraggedOver,
-    isInValid,
-    imageFile,
-  } = useFileDropZone(newImage ?? formik.values.image);
+  const { dropZoneRef, imageInputRef, image, imageName, isDraggedOver, isInValid, imageFile } = useFileDropZone(
+    newImage ?? formik.values.image
+  );
   const { ref, isHovering } = useHover();
   const combinedRef = useRef<HTMLDivElement>(null);
 
@@ -58,21 +50,13 @@ function InputImage({
         boxSize="300px"
         borderRadius="lg"
         borderWidth={"4px"}
-        borderColor={
-          isInValid ? "#E53E3E" : isDraggedOver ? "#3182ce" : "GrayText"
-        }
+        borderColor={isInValid ? "#E53E3E" : isDraggedOver ? "#3182ce" : "GrayText"}
         transform={`scale(${isDraggedOver || isHovering ? 1.05 : 1})`}
         transition="transform 0.3s ease"
         type="button"
       >
         <Center>
-          <Square
-            size="50%"
-            flexDir="column"
-            bg="rgba(255,255,255,0.6)"
-            backdropFilter={"blur(4px)"}
-            borderRadius="lg"
-          >
+          <Square size="50%" flexDir="column" bg="rgba(255,255,255,0.6)" backdropFilter={"blur(4px)"} borderRadius="lg">
             <Text fontWeight="bold" fontSize="large">
               Drag & Drop Image Here
             </Text>
@@ -90,15 +74,11 @@ function InputImage({
             Selected file:{" "}
           </Text>
           <Text as="span" fontWeight="bold" fontSize="large" color="#3182ce">
-            {imageName ?? newImageName} {((imageFile?.size??0)/1048576).toFixed(2)}MB
+            {imageName ?? newImageName} {((imageFile?.size ?? 0) / 1048576).toFixed(2)}MB
           </Text>
         </Text>
       )}
     </Flex>
   );
 }
-/**
- *
- * a modal with steppers on top, with 3 steps, with current step in "Upload Image". there is a square in the middle that says "Drop image here, or click to upload"
- */
 export default InputImage;

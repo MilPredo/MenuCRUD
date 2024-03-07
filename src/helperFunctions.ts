@@ -1,11 +1,4 @@
-import {
-  KeyValuePair,
-  Option,
-  OptionSet,
-  OptionSetFirebase,
-  ProductData,
-  ProductDataFirebase,
-} from "./types";
+import { KeyValuePair, Option, OptionSet, OptionSetFirebase, ProductData, ProductDataFirebase } from "./types";
 
 export const arrayToKeyValuePairs = <T>(arr: T[]): KeyValuePair<T> => {
   const result: KeyValuePair<T> = {};
@@ -15,9 +8,7 @@ export const arrayToKeyValuePairs = <T>(arr: T[]): KeyValuePair<T> => {
   return result;
 };
 
-export const keyValuePairsToArray = <T>(
-  keyValuePairs: KeyValuePair<T>
-): T[] => {
+export const keyValuePairsToArray = <T>(keyValuePairs: KeyValuePair<T>): T[] => {
   const result: T[] = [];
   Object.keys(keyValuePairs).forEach((key) => {
     const index = parseInt(key, 10);
@@ -27,9 +18,7 @@ export const keyValuePairsToArray = <T>(
 };
 
 //Converts key-value pairs from firebase into arrays.
-export const productDataFirebaseConvertKVToArrays = (
-  productData: KeyValuePair<ProductDataFirebase>
-): ProductData[] => {
+export const productDataFirebaseConvertKVToArrays = (productData: KeyValuePair<ProductDataFirebase>): ProductData[] => {
   let newProducts: ProductData[] = [];
   for (let product of [...keyValuePairsToArray(productData)]) {
     let newOptionSets: OptionSet[] = [];
@@ -47,19 +36,14 @@ export const productDataFirebaseConvertKVToArrays = (
 };
 
 //vice versa, but only for one product.
-export const productDataConvertArraysToKV = (
-  product: ProductData
-): ProductDataFirebase => {
+export const productDataConvertArraysToKV = (product: ProductData): ProductDataFirebase => {
   let newOptionSetsArray: OptionSetFirebase[] = [];
   for (let optionSet of product.optionSets ?? []) {
-    let newOptions: KeyValuePair<Option> = arrayToKeyValuePairs(
-      optionSet.options
-    );
+    let newOptions: KeyValuePair<Option> = arrayToKeyValuePairs(optionSet.options);
     let newOptionSet: OptionSetFirebase = { ...optionSet, options: newOptions };
     newOptionSetsArray.push(newOptionSet);
   }
-  let newOptionSetsKV: KeyValuePair<OptionSetFirebase> =
-    arrayToKeyValuePairs(newOptionSetsArray);
+  let newOptionSetsKV: KeyValuePair<OptionSetFirebase> = arrayToKeyValuePairs(newOptionSetsArray);
   let newProduct: ProductDataFirebase = {
     ...product,
     optionSets: newOptionSetsKV,
@@ -68,8 +52,7 @@ export const productDataConvertArraysToKV = (
 };
 
 export function generateRandomString(length: number) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
 
   for (let i = 0; i < length; i++) {

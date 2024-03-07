@@ -123,9 +123,7 @@ function InputProductModal({
         optionSetName: Yup.string().required("Option Set Name is required"),
         options: Yup.array().of(
           Yup.object().shape({
-            optionItemName: Yup.string().required(
-              "Option Item Name is required"
-            ),
+            optionItemName: Yup.string().required("Option Item Name is required"),
             costModifier: Yup.number().required("Cost Modifier is required"),
             priceModifier: Yup.number().required("Price Modifier is required"),
             minQuantity: Yup.number(),
@@ -149,15 +147,13 @@ function InputProductModal({
     onSubmit: async (values, { validateForm, setSubmitting }) => {
       validateForm(values).then((errors) => {
         console.log(errors);
-        // alert(errors);
       });
       setSubmitting(true);
+      values.name = values.name.toLowerCase();
       await addProductToDatabase(values as ProductData, imageFile).then(() => {
         alert("Product has been saved.");
         handleClose();
       });
-      // alert(JSON.stringify(values, null, 2));
-
       setSubmitting(false);
     },
   });
@@ -167,14 +163,7 @@ function InputProductModal({
     if (!formik.isValid && formik.isSubmitting) {
       alert("Your form is invalid, please check for required fields.");
       //Might remove it depending on how adding options would work.
-      if (
-        errors.baseCost ||
-        errors.basePrice ||
-        errors.category ||
-        errors.name ||
-        errors.stock
-      )
-        setActiveStep(2);
+      if (errors.baseCost || errors.basePrice || errors.category || errors.name || errors.stock) setActiveStep(2);
     }
   }, [formik.isSubmitting]);
   return (
@@ -185,9 +174,7 @@ function InputProductModal({
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent>
           <form
-            onKeyDown={(event) =>
-              event.key === "Enter" && event.preventDefault()
-            }
+            onKeyDown={(event) => event.key === "Enter" && event.preventDefault()}
             onSubmit={(e) => {
               formik.handleSubmit(e);
             }}
@@ -195,20 +182,12 @@ function InputProductModal({
             <ModalHeader>{title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack
-                divider={<Divider orientation="vertical" />}
-                spacing="0"
-                gap={4}
-              >
+              <Stack divider={<Divider orientation="vertical" />} spacing="0" gap={4}>
                 <Stepper index={activeStep}>
                   {steps.map((step, index) => (
                     <Step key={index}>
                       <StepIndicator>
-                        <StepStatus
-                          complete={<StepIcon />}
-                          incomplete={<StepNumber />}
-                          active={<StepNumber />}
-                        />
+                        <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
                       </StepIndicator>
 
                       <Box flexShrink="0">
@@ -225,7 +204,6 @@ function InputProductModal({
                     <InputImage
                       newImage={image}
                       newImageName={imageName}
-                      newImageFile={imageFile}
                       setImage={setImage}
                       setImageFile={setImageFile}
                       setImageName={setImageName}
@@ -261,12 +239,7 @@ function InputProductModal({
                 >
                   Next
                 </Button>
-                <Button
-                  isDisabled={activeStep !== 3}
-                  type="submit"
-                  colorScheme="green"
-                  isLoading={formik.isSubmitting}
-                >
+                <Button isDisabled={activeStep !== 3} type="submit" colorScheme="green" isLoading={formik.isSubmitting}>
                   Save
                 </Button>
               </ButtonGroup>

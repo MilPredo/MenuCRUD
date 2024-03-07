@@ -42,53 +42,23 @@ function ProductCard({ productData }: ProductCardProps) {
     a.shift();
     return { whole: a, fraction };
   }
-  const formattedCost = useMemo(
-    () => formatCurrency(productData.baseCost),
-    [productData.baseCost]
-  );
-  const formattedPrice = useMemo(
-    () => formatCurrency(productData.basePrice),
-    [productData.basePrice]
-  );
+  const formattedCost = useMemo(() => formatCurrency(productData.baseCost), [productData.baseCost]);
+  const formattedPrice = useMemo(() => formatCurrency(productData.basePrice), [productData.basePrice]);
 
   return (
-    <Flex
-      ref={ref}
-      // onMouseEnter={() => setIsHovering(true)}
-      // onMouseLeave={() => setIsHovering(false)}
-      // onFocus={() => setIsHovering(true)}
-      // onBlur={() => setIsHovering(false)}
-      // flexGrow={1}
-      flexDir={"column"}
-      // maxW="300px"
-      w="100%"
-      h="100%"
-      // p={2}
-      // gap={2}
-      align=""
-    >
+    <Flex ref={ref} flexDir={"column"} w="100%" h="100%" align="">
       <Flex
         mx={4}
         pos={"relative"}
         mb={`6px`}
         transform={
-          isHovering
-            ? `scale(1) rotate(${0}deg)`
-            : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
+          isHovering ? `scale(1) rotate(${0}deg)` : `scale(0.90) translateY(5%) rotate(${Math.random() * 6 - 3}deg)`
         }
         transition="transform 0.3s ease"
-        // bg={ImageLoading ? "gray" : undefined}
         borderRadius={16}
         zIndex={1}
       >
-        <Flex
-          pos={"relative"}
-          flexDir="column"
-          aspectRatio={1}
-          minW="100%"
-          bg="gray.100"
-          borderRadius={16}
-        >
+        <Flex pos={"relative"} flexDir="column" aspectRatio={1} minW="100%" bg="gray.100" borderRadius={16}>
           <Center borderRadius={16} pos="absolute" w="100%" h="100%">
             {ImageLoading && <Spinner />}
           </Center>
@@ -107,20 +77,15 @@ function ProductCard({ productData }: ProductCardProps) {
           />
           <Image
             borderRadius={16}
-            //src={productData.image}
             src={productData.image}
             alt={productData.name}
             onLoad={() => {
               setIsImageLoading(false);
             }}
             opacity={ImageLoading ? "0" : "1"}
-            // opacity={0}
             transition="opacity 1s ease"
             aspectRatio={1 / 1}
             objectFit="cover"
-            // fallbackSrc={placeHolderImg}
-            // width="100%" // Ensure consistent width for both loaded and placeholder images
-            // height="100%" // Ensure consistent height for both loaded and placeholder images
           />
         </Flex>
         <Box
@@ -148,6 +113,7 @@ function ProductCard({ productData }: ProductCardProps) {
               textAlign={"center"}
               noOfLines={3}
               textShadow="0px 0px 2px white"
+              textTransform="capitalize"
             >
               {productData.name}
             </Heading>
@@ -168,40 +134,16 @@ function ProductCard({ productData }: ProductCardProps) {
           gap={1}
         >
           <></>
-          <Stack
-            direction="row"
-            divider={<Divider orientation="vertical" />}
-            spacing="0"
-            gap={1}
-          >
+          <Stack direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
             <Flex flex={1} flexDir="column" justify="space-between" minH="60px">
-              <Text
-                fontWeight={"600"}
-                textAlign="center"
-                fontSize={"12px"}
-                color="GrayText"
-              >
+              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
                 Cost
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading
-                  as="span"
-                  fontSize={
-                    formattedCost.whole.toString().split("").length > 3
-                      ? "18px"
-                      : "24px"
-                  }
-                >
+                <Heading as="span" fontSize={formattedCost.whole.toString().split("").length > 3 ? "18px" : "24px"}>
                   ₱
                 </Heading>
-                <Heading
-                  as="span"
-                  size={
-                    formattedCost.whole.toString().split("").length > 3
-                      ? "md"
-                      : "lg"
-                  }
-                >
+                <Heading as="span" size={formattedCost.whole.toString().split("").length > 3 ? "md" : "lg"}>
                   {formattedCost.whole}
                 </Heading>
                 <Heading as="span" size="sm">
@@ -213,33 +155,14 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column" justify="space-between">
-              <Text
-                fontWeight={"600"}
-                textAlign="center"
-                fontSize={"12px"}
-                color="GrayText"
-              >
+              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
                 Price
               </Text>
               <Heading textAlign="center" size="sm">
-                <Heading
-                  as="span"
-                  fontSize={
-                    formattedPrice.whole.toString().split("").length > 3
-                      ? "18px"
-                      : "24px"
-                  }
-                >
+                <Heading as="span" fontSize={formattedPrice.whole.toString().split("").length > 3 ? "18px" : "24px"}>
                   ₱
                 </Heading>
-                <Heading
-                  as="span"
-                  size={
-                    formattedPrice.whole.toString().split("").length > 3
-                      ? "md"
-                      : "lg"
-                  }
-                >
+                <Heading as="span" size={formattedPrice.whole.toString().split("").length > 3 ? "md" : "lg"}>
                   {formattedPrice.whole}
                 </Heading>
                 <Heading as="span" size="sm">
@@ -251,19 +174,9 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
           </Stack>
-          <Stack
-            direction="row"
-            divider={<Divider orientation="vertical" />}
-            spacing="0"
-            gap={1}
-          >
+          <Stack direction="row" divider={<Divider orientation="vertical" />} spacing="0" gap={1}>
             <Flex flex={1} flexDir="column" justify="center">
-              <Text
-                fontWeight={"600"}
-                textAlign="center"
-                fontSize={"12px"}
-                color="GrayText"
-              >
+              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
                 Category
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -271,12 +184,7 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
             <Flex flex={1} flexDir="column" justify="center">
-              <Text
-                fontWeight={"600"}
-                textAlign="center"
-                fontSize={"12px"}
-                color="GrayText"
-              >
+              <Text fontWeight={"600"} textAlign="center" fontSize={"12px"} color="GrayText">
                 Available Stock
               </Text>
               <Heading textAlign="center" fontSize={"12px"}>
@@ -284,11 +192,7 @@ function ProductCard({ productData }: ProductCardProps) {
               </Heading>
             </Flex>
           </Stack>
-          <DropDownAccordion
-            isDisabled={(productData.optionSets?.length ?? 0) <= 0}
-            size="xs"
-            title={"Options"}
-          >
+          <DropDownAccordion isDisabled={(productData.optionSets?.length ?? 0) <= 0} size="xs" title={"Options"}>
             <OptionSection
               key={productData.name + productData.category}
               size="sm"
@@ -313,10 +217,7 @@ function ProductCard({ productData }: ProductCardProps) {
                 </Button>
               )}
             />
-            <DeleteProductButton
-              productData={productData}
-              rightIcon={<DeleteIcon />}
-            />
+            <DeleteProductButton productData={productData} rightIcon={<DeleteIcon />} />
           </ButtonGroup>
         </Stack>
       </Flex>

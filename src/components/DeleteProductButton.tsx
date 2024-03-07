@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
 import { deleteImage, deleteProduct } from "../api/firebase";
@@ -16,30 +17,42 @@ function DeleteProductButton({
   productData,
   rightIcon,
   leftIcon,
+  size,
+  isIconButton,
 }: ProductCardProps & {
-  rightIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
-  leftIcon?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
+  rightIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
+  leftIcon?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
+  size?: string;
+  isIconButton?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
   return (
     <>
-      <Button
-        colorScheme="red"
-        onClick={onOpen}
-        borderRadius={8}
-        rightIcon={rightIcon}
-        leftIcon={leftIcon}
-        variant="solid"
-        size="sm"
-      >
-        Delete
-      </Button>
+      {isIconButton ? (
+        <IconButton
+          aria-label="Delete Item"
+          colorScheme="red"
+          onClick={onOpen}
+          borderRadius={8}
+          variant="solid"
+          size={size ?? "sm"}
+          icon={leftIcon}
+        />
+      ) : (
+        <Button
+          colorScheme="red"
+          onClick={onOpen}
+          borderRadius={8}
+          rightIcon={rightIcon}
+          leftIcon={leftIcon}
+          variant="solid"
+          size={size ?? "sm"}
+        >
+          Delete
+        </Button>
+      )}
 
       <AlertDialog
         isOpen={isOpen}
@@ -54,8 +67,7 @@ function DeleteProductButton({
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              You are about to delete "{productData.name}". This action is
-              irreversible!
+              You are about to delete "{productData.name}". This action is irreversible!
             </AlertDialogBody>
 
             <AlertDialogFooter>

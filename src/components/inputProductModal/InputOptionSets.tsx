@@ -269,10 +269,7 @@ function InputOptionSets({ formik }: { formik: FormikProps<FormikProductData> })
                               size="sm"
                               colorScheme="red"
                               onClick={() => {
-                                deleteOption(
-                                  index,
-                                  optionIndex //optionSet.options.findIndex((option) => option.optionItemName === option.optionItemName)
-                                );
+                                deleteOption(index, optionIndex);
                               }}
                             >
                               <DeleteIcon />
